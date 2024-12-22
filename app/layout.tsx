@@ -1,15 +1,28 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import localFont from "next/font/local";
+import { cn } from "@/lib/utils";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const kaiOFont = localFont({
+  src: [
+    {
+      path: "../public/fonts/Kaio-Bold.woff2",
+      weight: "700",
+    },
+    {
+      path: "../public/fonts/Kaio-Black.woff2",
+      weight: "900",
+    },
+  ],
+  display: "swap",
+  variable: "--font-kaio",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -25,7 +38,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={cn(openSans.className, kaiOFont.variable, "antialiased")}
+        suppressHydrationWarning
       >
         {children}
       </body>

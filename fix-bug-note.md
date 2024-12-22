@@ -1,0 +1,5 @@
+- Bug 1: Bi chan truy cap boi Woocommerce tai Local
+  - Giai phap: Add the following line to the functions.php file of your active theme (twenty-twenty-five):
+  - add_filter('woocommerce_rest_check_permissions', '\_\_return_true');
+  - This will allow unrestricted access to the WooCommerce API.
+  - Please remember to remove or comment out this line when deploying your website to a live production environment to ensure proper security settings for the API.
