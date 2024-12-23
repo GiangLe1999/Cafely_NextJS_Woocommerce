@@ -54,6 +54,8 @@ export default {
         },
         "app-lavender": "#eedaea",
         "app-brown": "#8c726c",
+        "app-light-pink": "#fff5f5",
+        "app-orange": "#fcb318",
       },
       borderRadius: {
         lg: "var(--radius)",

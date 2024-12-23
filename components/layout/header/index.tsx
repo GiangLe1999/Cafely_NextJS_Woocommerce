@@ -1,11 +1,19 @@
 import { FC, JSX } from "react";
 import HeaderContent from "./header-content";
-import { getAllCategories } from "@/actions/queries";
+import { get3BestSellers, getAllCategories } from "@/actions/queries";
 
 const Header: FC = async (): Promise<JSX.Element> => {
-  const categories = await getAllCategories();
+  const [categories, threeBestSellers] = await Promise.all([
+    getAllCategories(),
+    get3BestSellers(),
+  ]);
 
-  return <HeaderContent categories={categories} />;
+  return (
+    <HeaderContent
+      categories={categories}
+      threeBestSellers={threeBestSellers}
+    />
+  );
 };
 
 export default Header;

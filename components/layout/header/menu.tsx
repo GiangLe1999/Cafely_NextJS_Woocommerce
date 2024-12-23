@@ -1,6 +1,4 @@
-"use client";
-
-import { FC, JSX, useEffect, useState } from "react";
+import { FC, JSX } from "react";
 import {
   HybridTooltip,
   HybridTooltipContent,
@@ -18,33 +16,22 @@ import Image from "next/image";
 interface Props {
   isScrolled: boolean;
   categories: Category[];
+  menuWidth: number;
 }
 
 const listItemClass =
-  "text-base font-medium relative after:absolute after:w-0 after:h-[2px] after:bottom-0 after:left-0 after:bg-foreground after:duration-300 after:ease-in-out hover:after:w-full";
+  "text-base font-medium relative after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-foreground after:duration-300 after:ease-in-out hover:after:w-full";
 
-const Menu: FC<Props> = ({ isScrolled, categories }): JSX.Element => {
-  const [menuWidth, setMenuWidth] = useState(0);
-
-  useEffect(() => {
-    const headerContent = document.querySelector("#header-content");
-    if (headerContent) {
-      const computedStyle = getComputedStyle(headerContent);
-      const paddingLeft = parseFloat(computedStyle.paddingLeft || "0");
-      const paddingRight = parseFloat(computedStyle.paddingRight || "0");
-
-      const widthWithoutPadding =
-        headerContent.clientWidth - paddingLeft - paddingRight;
-
-      setMenuWidth(widthWithoutPadding);
-    }
-  }, []);
-
+const Menu: FC<Props> = ({
+  isScrolled,
+  categories,
+  menuWidth,
+}): JSX.Element => {
   return (
     <TooltipProvider>
       <TouchProvider>
         <HybridTooltip>
-          <HybridTooltipTrigger asChild>
+          <HybridTooltipTrigger>
             <div
               className={cn(
                 "cursor-pointer h-[41px] font-semibold group hover:text-foreground w-fit flex items-center rounded-full px-3.5 py-2 text-sm",
@@ -57,10 +44,7 @@ const Menu: FC<Props> = ({ isScrolled, categories }): JSX.Element => {
           </HybridTooltipTrigger>
           <HybridTooltipContent
             align="start"
-            className={cn(
-              "z-[100] mt-3 origin-top-left bg-white border py-8 px-10 flex h-full gap-4 rounded-[2.5rem] mx-auto",
-              isScrolled ? "border-app-lavender" : "border-transparent"
-            )}
+            className="z-[100] mt-3 origin-top-left bg-white border border-app-lavender py-8 px-10 flex h-full gap-4 rounded-2xl mx-auto"
             style={{ width: menuWidth }}
           >
             <div className="flex-1 h-auto grid grid-cols-3 content-between gap-x-8 gap-y-12">
@@ -70,16 +54,17 @@ const Menu: FC<Props> = ({ isScrolled, categories }): JSX.Element => {
                   By Category
                 </h2>
                 <ul role="list" className="text-foreground">
-                  {categories.map((category) => (
-                    <li key={category.id} className="py-[3px] mb-0">
-                      <Link
-                        href={`/collections/${category.slug}`}
-                        className={listItemClass}
-                      >
-                        {category.name}
-                      </Link>
-                    </li>
-                  ))}
+                  {categories?.length > 0 &&
+                    categories.map((category) => (
+                      <li key={category.id} className="py-[3px] mb-0">
+                        <Link
+                          href={`/collections/${category.slug}`}
+                          className={listItemClass}
+                        >
+                          {category.name}
+                        </Link>
+                      </li>
+                    ))}
                 </ul>
               </div>
 

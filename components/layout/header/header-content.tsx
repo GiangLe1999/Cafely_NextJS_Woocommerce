@@ -6,14 +6,22 @@ import Menu from "./menu";
 import Logo from "../logo";
 import { cn } from "@/lib/utils";
 import { Category } from "@/types/category";
+import Link from "next/link";
+import Search from "./search";
+import { Product } from "@/types/product";
 
 interface Props {
   categories: Category[];
+  threeBestSellers: Product[];
 }
 
-const HeaderContent: FC<Props> = ({ categories }): JSX.Element => {
-  const [isScrolled, setIsScrolled] = useState(false);
+const HeaderContent: FC<Props> = ({
+  categories,
+  threeBestSellers,
+}): JSX.Element => {
   const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [menuWidth, setMenuWidth] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,6 +40,20 @@ const HeaderContent: FC<Props> = ({ categories }): JSX.Element => {
     }
   }, [pathname]);
 
+  useEffect(() => {
+    const headerContent = document.querySelector("#header-content");
+    if (headerContent) {
+      const computedStyle = getComputedStyle(headerContent);
+      const paddingLeft = parseFloat(computedStyle.paddingLeft || "0");
+      const paddingRight = parseFloat(computedStyle.paddingRight || "0");
+
+      const widthWithoutPadding =
+        headerContent.clientWidth - paddingLeft - paddingRight;
+
+      setMenuWidth(widthWithoutPadding);
+    }
+  }, []);
+
   return (
     <header
       className={cn(
@@ -47,11 +69,41 @@ const HeaderContent: FC<Props> = ({ categories }): JSX.Element => {
       >
         {/* <div className="flex items-center gap-6 lg:hidden">test</div> */}
 
+        {/* Right side */}
         <div className="hidden lg:block">
-          <Menu isScrolled={isScrolled} categories={categories} />
+          <ul
+            role="list"
+            className="flex flex-row items-center gap-11 text-sm font-semibold"
+          >
+            <li>
+              <Menu
+                isScrolled={isScrolled}
+                categories={categories}
+                menuWidth={menuWidth}
+              />
+            </li>
+
+            <li>
+              <Link href="/pages/about-us" className="text-primary">
+                About
+              </Link>
+            </li>
+          </ul>
         </div>
 
         <Logo />
+
+        {/* Left side */}
+        <div className="relative flex items-center justify-end gap-x-6">
+          <Link
+            href="/account/login"
+            className="text-primary text-sm font-semibold"
+          >
+            Log In
+          </Link>
+
+          <Search menuWidth={menuWidth} threeBestSellers={threeBestSellers} />
+        </div>
       </div>
     </header>
   );
