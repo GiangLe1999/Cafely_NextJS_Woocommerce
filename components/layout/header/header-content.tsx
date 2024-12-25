@@ -40,7 +40,7 @@ const HeaderContent: FC<Props> = ({
     }
   }, [pathname]);
 
-  useEffect(() => {
+  const updateMenuWidth = () => {
     const headerContent = document.querySelector("#header-content");
     if (headerContent) {
       const computedStyle = getComputedStyle(headerContent);
@@ -52,6 +52,16 @@ const HeaderContent: FC<Props> = ({
 
       setMenuWidth(widthWithoutPadding);
     }
+  };
+
+  useEffect(() => {
+    updateMenuWidth();
+
+    window.addEventListener("resize", updateMenuWidth);
+
+    return () => {
+      window.removeEventListener("resize", updateMenuWidth);
+    };
   }, []);
 
   return (

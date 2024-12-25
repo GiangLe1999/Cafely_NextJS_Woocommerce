@@ -12,6 +12,7 @@ export interface SearchedProduct {
 export interface SearchedPost {
   id: number;
   title: string;
+  thumbnail: string;
   slug: string;
   excerpt: string;
 }

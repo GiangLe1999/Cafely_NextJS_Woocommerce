@@ -9,16 +9,14 @@ interface Props {
   product: SearchedProduct | Product;
 }
 
-const SearchedProductCard: FC<Props> = ({ product }): JSX.Element => {
+const SearchedPostCard: FC<Props> = ({ product }): JSX.Element => {
   const imageUrl =
     "image" in product ? product.image : product.images?.[0]?.src || "";
-
-  console.log(product);
 
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group relative flex flex-col gap-y-4 rounded-3xl border border-app-lavender p-2 transition-all duration-500 hover:border-transparent hover:bg-app-light-pink md:gap-y-5"
+      className="h-full group relative flex flex-col gap-y-4 rounded-3xl border border-app-lavender p-2 transition-all duration-500 hover:border-transparent hover:bg-app-light-pink md:gap-y-5"
     >
       <div className="relative w-full overflow-hidden rounded-2xl bg-app-light-pink md:aspect-[4/3.2]">
         <Image
@@ -40,7 +38,7 @@ const SearchedProductCard: FC<Props> = ({ product }): JSX.Element => {
           </div>
         </div>
 
-        <h2 className="text-[15px] text-primary font-bold leading-snug tracking-tight">
+        <h2 className="text-[15px] text-primary font-extrabold leading-snug tracking-tight line-clamp-2">
           {product.name}
         </h2>
 
@@ -67,4 +65,4 @@ const SearchedProductCard: FC<Props> = ({ product }): JSX.Element => {
   );
 };
 
-export default SearchedProductCard;
+export default SearchedPostCard;
