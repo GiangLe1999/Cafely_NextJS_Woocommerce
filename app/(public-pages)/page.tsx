@@ -1,12 +1,7 @@
 import { NextPage } from "next";
-import { ReactNode } from "react";
 
-interface Props {
-  children: ReactNode;
-}
-
-const Home: NextPage<Props> = () => {
-  return <></>;
+const Home: NextPage = () => {
+  return <>Hello</>;
 };
 
 export default Home;

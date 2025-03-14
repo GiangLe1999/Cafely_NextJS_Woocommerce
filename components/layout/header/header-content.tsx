@@ -64,10 +64,7 @@ const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
       >
         {/* Left side menu */}
         <div className="hidden lg:block">
-          <ul
-            role="list"
-            className="relative flex flex-row items-center gap-11 text-sm"
-          >
+          <ul role="list" className="flex flex-row items-center gap-11 text-sm">
             <li
               onMouseEnter={() => setShowMenu(true)}
               onMouseLeave={() => setShowMenu(false)}
@@ -85,9 +82,7 @@ const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
                 Shop
                 <ChevronDown className="w-4 h-4 ml-3 group-hover:rotate-180 duration-150 shrink-0" />
               </div>
-              {categories.length > 0 && (
-                <Menu categories={categories} showMenu={showMenu} />
-              )}
+              <Menu categories={categories} showMenu={showMenu} />
             </li>
 
             <li>
