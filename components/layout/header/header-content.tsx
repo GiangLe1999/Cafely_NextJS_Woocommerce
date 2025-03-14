@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { FC, JSX, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Menu from "./menu";
 import Logo from "../logo";
 import { cn } from "@/lib/utils";
@@ -9,110 +9,133 @@ import { Category } from "@/types/category";
 import Link from "next/link";
 import Search from "./search";
 import { Product } from "@/types/product";
+import { ChevronDown, SearchIcon } from "lucide-react";
 
 interface Props {
   categories: Category[];
   threeBestSellers: Product[];
 }
 
-const HeaderContent: FC<Props> = ({
-  categories,
-  threeBestSellers,
-}): JSX.Element => {
+const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
   const pathname = usePathname();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [menuWidth, setMenuWidth] = useState(0);
+  const isHomepage = pathname === "/";
+  const [isScrolled, setIsScrolled] = useState(!isHomepage);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
+    if (!isHomepage) {
+      setIsScrolled(true);
+      return;
+    }
+
     const handleScroll = () => {
-      if (pathname === "/") {
-        setIsScrolled(window.scrollY > 0);
-      }
+      setIsScrolled(window.scrollY > 0);
     };
 
-    if (pathname === "/") {
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    } else {
-      setIsScrolled(true);
-    }
-  }, [pathname]);
-
-  const updateMenuWidth = () => {
-    const headerContent = document.querySelector("#header-content");
-    if (headerContent) {
-      const computedStyle = getComputedStyle(headerContent);
-      const paddingLeft = parseFloat(computedStyle.paddingLeft || "0");
-      const paddingRight = parseFloat(computedStyle.paddingRight || "0");
-
-      const widthWithoutPadding =
-        headerContent.clientWidth - paddingLeft - paddingRight;
-
-      setMenuWidth(widthWithoutPadding);
-    }
-  };
-
-  useEffect(() => {
-    updateMenuWidth();
-
-    window.addEventListener("resize", updateMenuWidth);
+    window.addEventListener("scroll", handleScroll);
+    // Initial check in case page is loaded when already scrolled
+    handleScroll();
 
     return () => {
-      window.removeEventListener("resize", updateMenuWidth);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isHomepage]);
+
+  const getTextColor = () => {
+    if (isHomepage) {
+      return isScrolled ? "text-primary" : "text-brown";
+    }
+    return "text-primary";
+  };
 
   return (
     <header
       className={cn(
+        "fixed top-0 left-0 z-10 w-full duration-500 block border-b",
         isScrolled
           ? "border-border bg-white"
-          : "border-transparent bg-transparent",
-        "fixed top-0 left-0 z-10 w-full duration-500 block border-b"
+          : "border-transparent bg-transparent"
       )}
     >
       <div
         id="header-content"
         className="container relative z-10 grid grid-cols-[1fr_auto_1fr] items-center gap-x-2 py-3"
       >
-        {/* <div className="flex items-center gap-6 lg:hidden">test</div> */}
-
-        {/* Right side */}
+        {/* Left side menu */}
         <div className="hidden lg:block">
           <ul
             role="list"
-            className="flex flex-row items-center gap-11 text-sm font-semibold"
+            className="relative flex flex-row items-center gap-11 text-sm"
           >
-            <li>
-              <Menu
-                isScrolled={isScrolled}
-                categories={categories}
-                menuWidth={menuWidth}
-              />
+            <li
+              onMouseEnter={() => setShowMenu(true)}
+              onMouseLeave={() => setShowMenu(false)}
+            >
+              <div
+                className={cn(
+                  "cursor-pointer h-[41px] font-semibold group hover:text-foreground w-fit flex items-center rounded-full px-3.5 py-2 text-sm transition duration-400",
+                  isScrolled
+                    ? "bg-secondary"
+                    : isHomepage
+                    ? "bg-[#FFF6D9]"
+                    : "bg-[#FFF4FE] hover:bg-[#FFF4FE]"
+                )}
+              >
+                Shop
+                <ChevronDown className="w-4 h-4 ml-3 group-hover:rotate-180 duration-150 shrink-0" />
+              </div>
+              {categories.length > 0 && (
+                <Menu categories={categories} showMenu={showMenu} />
+              )}
             </li>
 
             <li>
-              <Link href="/pages/about-us" className="text-primary">
+              <Link
+                href="/pages/about-us"
+                className={cn(
+                  "font-semibold transition-color duration-400",
+                  getTextColor()
+                )}
+              >
                 About
               </Link>
             </li>
           </ul>
         </div>
 
-        <Logo />
+        {/* Logo */}
+        <Logo className={isScrolled ? "text-primary" : ""} />
 
-        {/* Left side */}
-        <div className="relative flex items-center justify-end gap-x-6">
+        {/* Right side */}
+        <div className="flex items-center justify-end gap-x-6">
           <Link
             href="/account/login"
-            className="text-primary text-sm font-semibold"
+            className={cn(
+              "font-semibold transition-color duration-400 text-sm",
+              getTextColor()
+            )}
           >
             Log In
           </Link>
 
-          <Search menuWidth={menuWidth} threeBestSellers={threeBestSellers} />
+          <button
+            aria-label="Search"
+            onClick={() => setShowSearchResults(!showSearchResults)}
+          >
+            <SearchIcon
+              className={cn(
+                "w-[22px] h-[22px] transition-colors duration-400",
+                getTextColor()
+              )}
+            />
+          </button>
+
+          <Search
+            threeBestSellers={threeBestSellers}
+            showSearchResults={showSearchResults}
+            setShowSearchResults={setShowSearchResults}
+          />
         </div>
       </div>
     </header>

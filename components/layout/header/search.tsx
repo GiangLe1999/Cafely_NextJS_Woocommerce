@@ -1,11 +1,7 @@
 import { FC, JSX, useEffect, useState } from "react";
-import { ArrowRight, SearchIcon, XIcon } from "lucide-react";
+import { ArrowRight, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebouce";
 import { getSearchResults } from "@/actions/queries";
@@ -17,11 +13,16 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 interface Props {
-  menuWidth: number;
   threeBestSellers: Product[];
+  showSearchResults: boolean;
+  setShowSearchResults: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Search: FC<Props> = ({ menuWidth, threeBestSellers }): JSX.Element => {
+const Search: FC<Props> = ({
+  threeBestSellers,
+  showSearchResults,
+  setShowSearchResults,
+}): JSX.Element => {
   const [keyword, setKeyword] = useState<string>("");
   const [isFocused, setIsFocused] = useState(false);
   const debouncedKeyword = useDebounce(keyword, 500);
@@ -125,9 +126,10 @@ const Search: FC<Props> = ({ menuWidth, threeBestSellers }): JSX.Element => {
             Bestsellers
           </h2>
           <div className="products-grid grid w-full grid-cols-2 content-start gap-3 md:grid-cols-3">
-            {threeBestSellers.map((product) => (
-              <SearchedProductCard key={product.id} product={product} />
-            ))}
+            {Array.isArray(threeBestSellers) &&
+              threeBestSellers.map((product) => (
+                <SearchedProductCard key={product.id} product={product} />
+              ))}
           </div>
         </div>
       </div>
@@ -135,13 +137,10 @@ const Search: FC<Props> = ({ menuWidth, threeBestSellers }): JSX.Element => {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger>
-        <SearchIcon className="w-[22px] h-[22px] text-primary" />
-      </PopoverTrigger>
+    <Popover open={showSearchResults} onOpenChange={setShowSearchResults}>
       <PopoverContent
-        className="z-[100] mt-[22px] origin-top-right bg-white border border-app-lavender py-8 px-10 h-full gap-4 rounded-2xl mx-auto shadow-none"
-        style={{ width: menuWidth }}
+        align="end"
+        className="z-[100] mt-[22px] origin-top-right bg-white border border-app-lavender py-8 px-10 gap-4 rounded-2xl mx-auto shadow-none"
       >
         <div
           className={cn(

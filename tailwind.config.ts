@@ -14,6 +14,7 @@ export default {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        brown: "#791e10",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -61,6 +62,13 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      ".popover-content-width-same-as-its-trigger": {
+        width: "var(--radix-popover-trigger-width)",
+        "max-height": "var(--radix-popover-content-available-height)",
+      },
+      transitionDuration: {
+        400: "400ms",
       },
     },
   },
