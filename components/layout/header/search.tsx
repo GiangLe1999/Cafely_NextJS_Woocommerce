@@ -1,7 +1,6 @@
-import { FC, JSX, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState, useRef } from "react";
 import { ArrowRight, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverContent } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebouce";
 import { getSearchResults } from "@/actions/queries";
@@ -31,44 +30,82 @@ const Search: FC<Props> = ({
     posts: SearchedPost[];
   }>({ products: [], posts: [] });
   const [isFetching, setIsFetching] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
 
+  // Handle clicks outside the search component
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setShowSearchResults(false);
+      }
+    };
+
+    if (showSearchResults) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSearchResults, setShowSearchResults]);
+
+  // Fetch search results when keyword changes
   useEffect(() => {
     const fetchResults = async () => {
       if (!debouncedKeyword) {
         setResults({ products: [], posts: [] });
         return;
       }
+
       try {
         setIsFetching(true);
         const results = await getSearchResults(debouncedKeyword);
         setResults(results);
       } catch (error) {
         console.error("Error fetching search results:", error);
+        setResults({ products: [], posts: [] });
       } finally {
         setIsFetching(false);
       }
     };
+
     fetchResults();
   }, [debouncedKeyword]);
 
-  const renderResults = () => {
-    // Nếu đang fetch kết quả
+  // Clear search when component unmounts or is hidden
+  useEffect(() => {
+    if (!showSearchResults) {
+      setKeyword("");
+    }
+  }, [showSearchResults]);
+
+  const handleClearSearch = () => {
+    setKeyword("");
+  };
+
+  const renderSkeletons = () => (
+    <ul className="flex max-h-96 md:max-h-none auto-cols-[minmax(200px,1fr)] grid-flow-col grid-cols-[repeat(auto-fill,minmax(200px,1fr))] flex-col content-start gap-3 px-4 md:grid md:overflow-x-auto md:px-0 md:pb-4 overflow-y-auto">
+      {Array.from({ length: 10 }).map((_, idx) => (
+        <li
+          key={idx}
+          className="w-full shrink-0 md:h-[325px] h-[71px] animate-pulse bg-app-light-pink rounded-2xl"
+        />
+      ))}
+    </ul>
+  );
+
+  const renderSearchResults = () => {
     if (isFetching) {
       return (
         <div className="z-[9] flex flex-col overflow-hidden pt-5">
-          <ul className="flex max-h-96 md:max-h-none auto-cols-[minmax(200px,1fr)] grid-flow-col grid-cols-[repeat(auto-fill,minmax(200px,1fr))] flex-col content-start gap-3 px-4 md:grid md:overflow-x-auto md:px-0 md:pb-4 overflow-y-auto">
-            {Array.from({ length: 10 }).map((_, idx) => (
-              <li
-                key={idx}
-                className="w-full shrink-0 md:h-[325px] h-[71px] animate-pulse bg-app-light-pink rounded-2xl"
-              />
-            ))}
-          </ul>
+          {renderSkeletons()}
         </div>
       );
     }
 
-    // Nếu tìm thấy kết quả trả về thích hợp
     if (results.products.length || results.posts.length) {
       return (
         <div className="z-[9] flex max-h-96 flex-col overflow-hidden pt-5 empty:hidden md:max-h-none">
@@ -90,8 +127,9 @@ const Search: FC<Props> = ({
           <div className="mt-3 px-4 text-center md:px-0">
             <Button className="w-[170px] h-[42px] group p-0">
               <Link
-                href={`/search?q=${keyword}`}
+                href={`/search?q=${encodeURIComponent(keyword)}`}
                 className="flex w-full h-full items-center justify-between gap-1 font-bold text-foreground group-hover:text-white transition duration-500 px-6 py-[14px]"
+                onClick={() => setShowSearchResults(false)}
               >
                 Show All
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-500" />
@@ -102,7 +140,6 @@ const Search: FC<Props> = ({
       );
     }
 
-    // Nếu không tìm thấy kết quả nào thích hợp
     if (debouncedKeyword) {
       return (
         <div className="search-results z-[9] flex max-h-96 flex-col overflow-hidden pt-5 empty:hidden md:max-h-none">
@@ -113,35 +150,39 @@ const Search: FC<Props> = ({
       );
     }
 
-    // Trạng thái ban đầu
-    return (
-      <div className="mt-7 grid grid-cols-1 gap-8 px-4 md:mt-6 md:grid-cols-[.5fr,1fr] md:px-0 lg:grid-cols-[.65fr,1fr]">
-        <div>
-          <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-[#9e7e6d]">
-            Trending
-          </h2>
-        </div>
-        <div>
-          <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-[#9e7e6d]">
-            Bestsellers
-          </h2>
-          <div className="products-grid grid w-full grid-cols-2 content-start gap-3 md:grid-cols-3">
-            {Array.isArray(threeBestSellers) &&
-              threeBestSellers.map((product) => (
-                <SearchedProductCard key={product.id} product={product} />
-              ))}
-          </div>
-        </div>
-      </div>
-    );
+    return renderInitialState();
   };
 
+  const renderInitialState = () => (
+    <div className="mt-7 grid grid-cols-1 gap-8 px-4 md:mt-6 md:grid-cols-[.5fr,1fr] md:px-0 lg:grid-cols-[.65fr,1fr]">
+      <div>
+        <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-[#9e7e6d]">
+          Trending
+        </h2>
+      </div>
+      <div>
+        <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-[#9e7e6d]">
+          Bestsellers
+        </h2>
+        <div className="products-grid grid w-full grid-cols-2 content-start gap-3 md:grid-cols-3">
+          {Array.isArray(threeBestSellers) &&
+            threeBestSellers.map((product) => (
+              <SearchedProductCard key={product.id} product={product} />
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <Popover open={showSearchResults} onOpenChange={setShowSearchResults}>
-      <PopoverContent
-        align="end"
-        className="z-[100] mt-[22px] origin-top-right bg-white border border-app-lavender py-8 px-10 gap-4 rounded-2xl mx-auto shadow-none"
-      >
+    <div
+      ref={searchRef}
+      className={cn(
+        "absolute top-full left-0 right-0 container origin-top transition duration-400 z-[100]",
+        showSearchResults ? "scale-3d-1" : "scale-3d-0"
+      )}
+    >
+      <div className="mt-2 bg-white border border-app-lavender py-8 px-10 gap-4 rounded-2xl">
         <div
           className={cn(
             "pr-10 relative w-full rounded-[8px] h-11 border-2 transition duration-500",
@@ -155,18 +196,21 @@ const Search: FC<Props> = ({
             onBlur={() => setIsFocused(false)}
             placeholder="Search"
             className="placeholder:text-base md:text-base h-full rounded-[8px] !outline-none !border-none"
-            autoFocus
+            autoFocus={showSearchResults}
           />
-          <button
-            onClick={() => setKeyword("")}
-            className="bg-app-light-pink w-8 h-8 grid place-items-center rounded-[8px] absolute top-1/2 -translate-y-1/2 right-1.5 text-foreground"
-          >
-            <XIcon className="w-5 h-5" />
-          </button>
+          {keyword && (
+            <button
+              onClick={handleClearSearch}
+              className="bg-app-light-pink w-8 h-8 grid place-items-center rounded-[8px] absolute top-1/2 -translate-y-1/2 right-1.5 text-foreground"
+              aria-label="Clear search"
+            >
+              <XIcon className="w-5 h-5" />
+            </button>
+          )}
         </div>
-        {renderResults()}
-      </PopoverContent>
-    </Popover>
+        {renderSearchResults()}
+      </div>
+    </div>
   );
 };
 

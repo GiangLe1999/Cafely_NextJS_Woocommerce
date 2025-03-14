@@ -10,6 +10,7 @@ import Link from "next/link";
 import Search from "./search";
 import { Product } from "@/types/product";
 import { ChevronDown, SearchIcon } from "lucide-react";
+import CartIcon from "@/components/icons/cart";
 
 interface Props {
   categories: Category[];
@@ -49,10 +50,24 @@ const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
     return "text-primary";
   };
 
+  const getBadgeTextColor = () => {
+    if (isHomepage) {
+      return isScrolled ? "text-brown" : "text-white";
+    }
+    return "text-brown";
+  };
+
+  const getBadgeBackgroundColor = () => {
+    if (isHomepage) {
+      return isScrolled ? "bg-secondary" : "bg-primary";
+    }
+    return "bg-secondary";
+  };
+
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 z-10 w-full duration-500 block border-b",
+        "fixed top-0 left-0 w-full duration-500 block border-b z-50",
         isScrolled
           ? "border-border bg-white"
           : "border-transparent bg-transparent"
@@ -114,23 +129,43 @@ const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
             Log In
           </Link>
 
-          <button
-            aria-label="Search"
-            onClick={() => setShowSearchResults(!showSearchResults)}
-          >
+          <button aria-label="Search">
             <SearchIcon
               className={cn(
-                "w-[22px] h-[22px] transition-colors duration-400",
+                "w-[21px] h-[21px] transition-colors duration-400",
                 getTextColor()
               )}
+              onClick={() => setShowSearchResults(!showSearchResults)}
+            />
+
+            <Search
+              threeBestSellers={threeBestSellers}
+              showSearchResults={showSearchResults}
+              setShowSearchResults={setShowSearchResults}
             />
           </button>
 
-          <Search
-            threeBestSellers={threeBestSellers}
-            showSearchResults={showSearchResults}
-            setShowSearchResults={setShowSearchResults}
-          />
+          <button
+            aria-label="Cart"
+            onClick={() => setShowSearchResults(!showSearchResults)}
+            className="relative"
+          >
+            <CartIcon
+              className={cn(
+                "w-[21px] h-[21px] transition-colors duration-400",
+                getTextColor()
+              )}
+            />
+            <span
+              className={cn(
+                getBadgeTextColor(),
+                getBadgeBackgroundColor(),
+                "transition-all duration-400 absolute w-4 aspect-square -top-1 right-[-5px] rounded-full text-[10px] font-mono grid place-items-center"
+              )}
+            >
+              0
+            </span>
+          </button>
         </div>
       </div>
     </header>

@@ -4,19 +4,14 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 
-const kaiOFont = localFont({
+const ppSans = localFont({
   src: [
     {
-      path: "../public/fonts/Kaio-Bold.woff2",
-      weight: "700",
-    },
-    {
-      path: "../public/fonts/Kaio-Black.woff2",
-      weight: "900",
+      path: "../public/fonts/PP-Sans.woff2",
     },
   ],
   display: "swap",
-  variable: "--font-kaio",
+  variable: "--font-pp-sans",
 });
 
 const openSans = Open_Sans({
@@ -38,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(openSans.className, kaiOFont.variable, "antialiased")}
+        className={cn(openSans.className, ppSans.variable, "antialiased")}
         suppressHydrationWarning
       >
         {children}

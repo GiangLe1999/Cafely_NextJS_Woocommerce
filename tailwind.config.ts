@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        kaio: ["var(--font-kaio)"],
+        pp_sans: ["var(--font-pp-sans)"],
       },
       colors: {
         background: "hsl(var(--background))",
