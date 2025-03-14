@@ -26,7 +26,7 @@ const Menu: FC<Props> = ({ categories, showMenu }): JSX.Element => {
         <div className="flex-1 h-auto grid grid-cols-3 content-between gap-x-8 gap-y-12">
           {/* Categories */}
           <div>
-            <h2 className="mb-[1.25rem] text-xs font-bold uppercase tracking-wider text-[#9e7e6d]">
+            <h2 className="mb-[1.25rem] text-xs font-bold uppercase tracking-wider text-light_brown">
               By Category
             </h2>
             <ul role="list" className="text-foreground space-y-1">
@@ -46,7 +46,7 @@ const Menu: FC<Props> = ({ categories, showMenu }): JSX.Element => {
 
           {/* About Us */}
           <div>
-            <h2 className="mb-[1.25rem] text-xs font-bold uppercase tracking-wider text-[#9e7e6d]">
+            <h2 className="mb-[1.25rem] text-xs font-bold uppercase tracking-wider text-light_brown">
               About Us
             </h2>
             <ul role="list" className="text-foreground space-y-1">
@@ -69,7 +69,7 @@ const Menu: FC<Props> = ({ categories, showMenu }): JSX.Element => {
 
           {/* Learn */}
           <div>
-            <h2 className="mb-[1.25rem] text-xs font-bold uppercase tracking-wider text-[#9e7e6d]">
+            <h2 className="mb-[1.25rem] text-xs font-bold uppercase tracking-wider text-light_brown">
               Learn
             </h2>
             <ul role="list" className="text-foreground space-y-1">

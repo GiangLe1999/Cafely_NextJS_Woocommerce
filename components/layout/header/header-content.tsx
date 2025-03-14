@@ -10,7 +10,7 @@ import Link from "next/link";
 import Search from "./search";
 import { Product } from "@/types/product";
 import { ChevronDown, SearchIcon } from "lucide-react";
-import CartIcon from "@/components/icons/cart";
+import Cart from "./cart";
 
 interface Props {
   categories: Category[];
@@ -145,27 +145,11 @@ const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
             />
           </button>
 
-          <button
-            aria-label="Cart"
-            onClick={() => setShowSearchResults(!showSearchResults)}
-            className="relative"
-          >
-            <CartIcon
-              className={cn(
-                "w-[21px] h-[21px] transition-colors duration-400",
-                getTextColor()
-              )}
-            />
-            <span
-              className={cn(
-                getBadgeTextColor(),
-                getBadgeBackgroundColor(),
-                "transition-all duration-400 absolute w-4 aspect-square -top-1 right-[-5px] rounded-full text-[10px] font-mono grid place-items-center"
-              )}
-            >
-              0
-            </span>
-          </button>
+          <Cart
+            getTextColor={getTextColor}
+            getBadgeTextColor={getBadgeTextColor}
+            getBadgeBackgroundColor={getBadgeBackgroundColor}
+          />
         </div>
       </div>
     </header>

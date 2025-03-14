@@ -156,12 +156,12 @@ const Search: FC<Props> = ({
   const renderInitialState = () => (
     <div className="mt-7 grid grid-cols-1 gap-8 px-4 md:mt-6 md:grid-cols-[.5fr,1fr] md:px-0 lg:grid-cols-[.65fr,1fr]">
       <div>
-        <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-[#9e7e6d]">
+        <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-light_brown">
           Trending
         </h2>
       </div>
       <div>
-        <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-[#9e7e6d]">
+        <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-light_brown">
           Bestsellers
         </h2>
         <div className="products-grid grid w-full grid-cols-2 content-start gap-3 md:grid-cols-3">
