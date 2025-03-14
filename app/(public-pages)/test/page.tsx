@@ -1,8 +1,6 @@
 import { NextPage } from "next";
 
-interface Props {}
-
-const page: NextPage<Props> = () => {
+const page: NextPage = () => {
   return <div>page</div>;
 };
 
