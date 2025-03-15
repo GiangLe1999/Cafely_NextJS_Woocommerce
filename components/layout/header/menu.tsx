@@ -114,7 +114,7 @@ const Menu: FC<Props> = ({ categories, showMenu }): JSX.Element => {
             />
           </Link>
 
-          <h5 className="font-pp_sans mb-1.5 text-base md:text-2xl text-foreground uppercase font-bold mt-4">
+          <h5 className="font-pp_sans mb-1.5 text-base md:text-2xl text-brown uppercase font-bold mt-3">
             Take Coffee Quiz
           </h5>
 

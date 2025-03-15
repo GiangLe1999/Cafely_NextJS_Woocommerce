@@ -14,9 +14,7 @@ export default {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        brown: "#791e10",
-        light_brown: "#9e7e6d",
-        light_pink: "#fff5f5",
+
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -57,8 +55,9 @@ export default {
         },
         "app-lavender": "#eedaea",
         "app-brown": "#8c726c",
-        "app-light-pink": "#fff5f5",
-        "app-orange": "#fcb318",
+        brown: "#791e10",
+        light_brown: "#9e7e6d",
+        light_pink: "#fff5f5",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -1,6 +1,6 @@
+import { FC, JSX } from "react";
 import CartIcon from "@/components/icons/cart";
 import { cn } from "@/lib/utils";
-import { FC, JSX } from "react";
 import {
   Sheet,
   SheetContent,

@@ -16,9 +16,9 @@ const SearchedPostCard: FC<Props> = ({ product }): JSX.Element => {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="h-full group relative flex flex-col gap-y-4 rounded-3xl border border-app-lavender p-2 transition-all duration-500 hover:border-transparent hover:bg-app-light-pink md:gap-y-5"
+      className="h-full group relative flex flex-col gap-y-4 rounded-3xl border border-app-lavender p-2 transition-all duration-500 hover:border-transparent hover:bg-light_pink md:gap-y-5"
     >
-      <div className="relative w-full overflow-hidden rounded-2xl bg-app-light-pink md:aspect-[4/3.2]">
+      <div className="relative w-full overflow-hidden rounded-2xl bg-light_pink md:aspect-[4/3.2]">
         <Image
           src={imageUrl}
           alt={product.name}

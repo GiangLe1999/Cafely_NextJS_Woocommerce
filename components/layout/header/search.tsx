@@ -35,10 +35,15 @@ const Search: FC<Props> = ({
   // Handle clicks outside the search component
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target as Node)
-      ) {
+      const target = event.target as Node;
+
+      // Nếu click vào search-icon, không làm gì cả
+      if ((event.target as HTMLElement).id === "search-icon") {
+        return;
+      }
+
+      // Nếu click ra ngoài searchRef thì ẩn kết quả tìm kiếm
+      if (searchRef.current && !searchRef.current.contains(target)) {
         setShowSearchResults(false);
       }
     };
@@ -88,10 +93,10 @@ const Search: FC<Props> = ({
 
   const renderSkeletons = () => (
     <ul className="flex max-h-96 md:max-h-none auto-cols-[minmax(200px,1fr)] grid-flow-col grid-cols-[repeat(auto-fill,minmax(200px,1fr))] flex-col content-start gap-3 px-4 md:grid md:overflow-x-auto md:px-0 md:pb-4 overflow-y-auto">
-      {Array.from({ length: 10 }).map((_, idx) => (
+      {[1, 2, 3, 4, 5].map((_, idx) => (
         <li
           key={idx}
-          className="w-full shrink-0 md:h-[325px] h-[71px] animate-pulse bg-app-light-pink rounded-2xl"
+          className="w-full shrink-0 md:h-[325px] h-[71px] animate-pulse bg-light_pink rounded-2xl"
         />
       ))}
     </ul>
@@ -106,7 +111,7 @@ const Search: FC<Props> = ({
       );
     }
 
-    if (results.products.length || results.posts.length) {
+    if (results?.products?.length || results?.posts?.length) {
       return (
         <div className="z-[9] flex max-h-96 flex-col overflow-hidden pt-5 empty:hidden md:max-h-none">
           <ul
@@ -156,12 +161,12 @@ const Search: FC<Props> = ({
   const renderInitialState = () => (
     <div className="mt-7 grid grid-cols-1 gap-8 px-4 md:mt-6 md:grid-cols-[.5fr,1fr] md:px-0 lg:grid-cols-[.65fr,1fr]">
       <div>
-        <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-light_brown">
+        <h2 className="mb-[1.25rem] text-xs font-bold uppercase tracking-wider text-light_brown text-left">
           Trending
         </h2>
       </div>
       <div>
-        <h2 className="mb-[1.25rem] text-[0.6875rem] font-bold uppercase tracking-wider text-light_brown">
+        <h2 className="mb-[1.25rem] text-xs font-bold uppercase tracking-wider text-light_brown text-left">
           Bestsellers
         </h2>
         <div className="products-grid grid w-full grid-cols-2 content-start gap-3 md:grid-cols-3">
@@ -196,12 +201,11 @@ const Search: FC<Props> = ({
             onBlur={() => setIsFocused(false)}
             placeholder="Search"
             className="placeholder:text-base md:text-base h-full rounded-[8px] !outline-none !border-none"
-            autoFocus={showSearchResults}
           />
           {keyword && (
             <button
               onClick={handleClearSearch}
-              className="bg-app-light-pink w-8 h-8 grid place-items-center rounded-[8px] absolute top-1/2 -translate-y-1/2 right-1.5 text-foreground"
+              className="bg-light_pink w-8 h-8 grid place-items-center rounded-[8px] absolute top-1/2 -translate-y-1/2 right-1.5 text-foreground"
               aria-label="Clear search"
             >
               <XIcon className="w-5 h-5" />

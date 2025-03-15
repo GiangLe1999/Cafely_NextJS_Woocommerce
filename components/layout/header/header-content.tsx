@@ -131,6 +131,7 @@ const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
 
           <button aria-label="Search">
             <SearchIcon
+              id="search-icon"
               className={cn(
                 "w-[21px] h-[21px] transition-colors duration-400",
                 getTextColor()
