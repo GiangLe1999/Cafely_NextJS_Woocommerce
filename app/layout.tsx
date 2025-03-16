@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
+import { Figtree } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
+import QueryProvider from "@/components/providers/query-provider";
 
 const ppSans = localFont({
   src: [
@@ -14,7 +15,7 @@ const ppSans = localFont({
   variable: "--font-pp-sans",
 });
 
-const openSans = Open_Sans({
+const figtree = Figtree({
   variable: "--font-open-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -33,10 +34,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(openSans.className, ppSans.variable, "antialiased")}
+        className={cn(figtree.className, ppSans.variable, "antialiased")}
         suppressHydrationWarning
       >
-        {children}
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );

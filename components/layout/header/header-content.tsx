@@ -129,11 +129,11 @@ const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
             Log In
           </Link>
 
-          <button aria-label="Search">
+          <div aria-label="Search">
             <SearchIcon
               id="search-icon"
               className={cn(
-                "w-[21px] h-[21px] transition-colors duration-400",
+                "w-[21px] h-[21px] transition-colors duration-400 cursor-pointer",
                 getTextColor()
               )}
               onClick={() => setShowSearchResults(!showSearchResults)}
@@ -144,7 +144,7 @@ const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
               showSearchResults={showSearchResults}
               setShowSearchResults={setShowSearchResults}
             />
-          </button>
+          </div>
 
           <Cart
             getTextColor={getTextColor}

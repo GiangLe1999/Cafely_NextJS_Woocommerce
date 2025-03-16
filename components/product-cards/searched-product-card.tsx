@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC, JSX } from "react";
 import { Rating } from "../ui/rating";
+import ProductPrice from "./product-price";
 
 interface Props {
   product: SearchedProduct | Product;
@@ -38,27 +39,15 @@ const SearchedPostCard: FC<Props> = ({ product }): JSX.Element => {
           </div>
         </div>
 
-        <h2 className="text-[15px] text-primary font-extrabold leading-snug tracking-tight line-clamp-2">
+        <h2 className="text-[15px] text-primary font-bold leading-snug tracking-tight line-clamp-2">
           {product.name}
         </h2>
 
         <div className="mt-4 flex flex-grow flex-col justify-end">
-          <div className="text-xs text-app-red">
-            {product?.sale_price ? (
-              <>
-                <span className="font-semibold text-app-brown/70 mr-1">
-                  <s>${product.regular_price}</s>
-                </span>
-                <span className="font-bold text-primary">
-                  ${product.sale_price}
-                </span>
-              </>
-            ) : (
-              <span className="font-bold text-primary">
-                ${product.regular_price}
-              </span>
-            )}
-          </div>
+          <ProductPrice
+            sale_price={product?.sale_price}
+            regular_price={product?.regular_price}
+          />
         </div>
       </div>
     </Link>

@@ -4,9 +4,12 @@ import { persist } from "zustand/middleware";
 
 // Định nghĩa kiểu dữ liệu cho sản phẩm
 interface Product {
-  id: string;
+  id: number;
   name: string;
+  regular_price: number;
   price: number;
+  is_beans: boolean;
+  slug: string;
   quantity: number;
   image?: string;
 }
@@ -19,8 +22,8 @@ interface CartState {
 
   // Các action
   addItem: (item: Product) => void;
-  removeItem: (itemId: string) => void;
-  updateQuantity: (itemId: string, quantity: number) => void;
+  removeItem: (itemId: number) => void;
+  updateQuantity: (itemId: number, quantity: number) => void;
   clearCart: () => void;
 }
 
@@ -83,9 +86,12 @@ const useCartStore = create<CartState>()(
 
           const quantityDifference = newQuantity - itemToUpdate.quantity;
 
-          const updatedItems = state.items.map((item) =>
-            item.id === itemId ? { ...item, quantity: newQuantity } : item
-          );
+          const updatedItems =
+            newQuantity > 0
+              ? state.items.map((item) =>
+                  item.id === itemId ? { ...item, quantity: newQuantity } : item
+                )
+              : state.items.filter((item) => item.id !== itemId); // Remove item if quantity is 0
 
           return {
             items: updatedItems,

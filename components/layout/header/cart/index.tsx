@@ -10,6 +10,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import FreeShippingProgress from "./free-shipping-progress";
+import CartFooter from "./cart-footer";
+import CartProductsList from "./cart-products-list";
+import useCartStore from "@/lib/stores/useCartStore";
 
 interface Props {
   getTextColor: () => string;
@@ -22,10 +25,12 @@ const Cart: FC<Props> = ({
   getBadgeTextColor,
   getBadgeBackgroundColor,
 }): JSX.Element => {
+  const { totalItems } = useCartStore();
+
   return (
     <Sheet>
       <SheetTrigger>
-        <button aria-label="Cart" className="relative">
+        <div aria-label="Cart" className="relative">
           <CartIcon
             className={cn(
               "w-[21px] h-[21px] transition-colors duration-400",
@@ -41,27 +46,25 @@ const Cart: FC<Props> = ({
           >
             0
           </span>
-        </button>
+        </div>
       </SheetTrigger>
-      <SheetContent className="p-0 bg-white m-3 h-auto rounded-[24px] !max-w-[512px]">
+      <SheetContent className="p-0 bg-white m-3 h-auto rounded-[24px] !max-w-[512px] flex flex-col gap-0">
         <SheetHeader className="p-4 border-b">
           <SheetTitle className="text-base font-bold text-brown">
-            Your cart (0)
+            Your cart ({totalItems})
           </SheetTitle>
         </SheetHeader>
 
-        <div>
+        <div className="flex-1">
           <FreeShippingProgress freeShippPercents={33} />
 
-          <div className="p-4">Name</div>
+          <div className="p-4">
+            <CartProductsList />
+          </div>
         </div>
 
         <SheetFooter className="pt-3 pb-4 px-4 sm:justify-start border-t">
-          <div className="mb-2 flex items-center justify-between gap-1">
-            <h4 className="text-xs font-bold text-light_brown">
-              Complete coffee routine
-            </h4>
-          </div>
+          <CartFooter />
         </SheetFooter>
       </SheetContent>
     </Sheet>

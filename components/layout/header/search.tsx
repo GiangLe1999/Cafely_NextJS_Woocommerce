@@ -203,13 +203,13 @@ const Search: FC<Props> = ({
             className="placeholder:text-base md:text-base h-full rounded-[8px] !outline-none !border-none"
           />
           {keyword && (
-            <button
+            <div
               onClick={handleClearSearch}
-              className="bg-light_pink w-8 h-8 grid place-items-center rounded-[8px] absolute top-1/2 -translate-y-1/2 right-1.5 text-foreground"
+              className="bg-light_pink cursor-pointer w-8 h-8 grid place-items-center rounded-[8px] absolute top-1/2 -translate-y-1/2 right-1.5 text-foreground"
               aria-label="Clear search"
             >
               <XIcon className="w-5 h-5" />
-            </button>
+            </div>
           )}
         </div>
         {renderSearchResults()}

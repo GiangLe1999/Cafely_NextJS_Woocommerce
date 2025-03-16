@@ -1,3 +1,13 @@
+export interface ProductAttribute {
+  id: number;
+  name: string;
+  options: string[];
+  position: number;
+  slug: string;
+  variation: boolean;
+  visible: boolean;
+}
+
 export interface Product {
   id: number; // ID của sản phẩm
   name: string; // Tên sản phẩm
@@ -30,4 +40,5 @@ export interface Product {
   on_sale: boolean; // Sản phẩm có đang giảm giá không
   average_rating: string;
   rating_count: number;
+  attributes: Array<ProductAttribute>;
 }
