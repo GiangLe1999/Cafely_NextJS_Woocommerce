@@ -32,6 +32,11 @@ interface CartState {
   clearCart: () => void;
 }
 
+// Hàm format số thành số có 2 chữ số thập phân
+const formatPrice = (price: number): number => {
+  return parseFloat(price.toFixed(2));
+};
+
 // Tạo store với zustand và sử dụng middleware persist để lưu vào localStorage
 const useCartStore = create<CartState>()(
   persist(
@@ -79,10 +84,16 @@ const useCartStore = create<CartState>()(
           // Cập nhật giá của tất cả sản phẩm theo loại
           const updatedItems = state.items.map((item) => {
             if (item.type === "bag") {
-              return { ...item, price: item.backup_price * bagDiscountRate };
+              return {
+                ...item,
+                price: formatPrice(item.backup_price * bagDiscountRate),
+              };
             }
             if (item.type === "pouch") {
-              return { ...item, price: item.backup_price * pouchDiscountRate };
+              return {
+                ...item,
+                price: formatPrice(item.backup_price * pouchDiscountRate),
+              };
             }
             return item;
           });
@@ -97,9 +108,11 @@ const useCartStore = create<CartState>()(
             return {
               items: newItems,
               totalItems: state.totalItems + product.quantity,
-              totalPrice: newItems.reduce(
-                (sum, item) => sum + item.price * item.quantity,
-                0
+              totalPrice: formatPrice(
+                newItems.reduce(
+                  (sum, item) => sum + item.price * item.quantity,
+                  0
+                )
               ),
               totalBags,
               totalPouch,
@@ -107,12 +120,13 @@ const useCartStore = create<CartState>()(
           } else {
             const newProduct = {
               ...product,
-              price:
+              price: formatPrice(
                 product.type === "bag"
                   ? product.backup_price * bagDiscountRate
                   : product.type === "pouch"
                   ? product.backup_price * pouchDiscountRate
-                  : product.price,
+                  : product.price
+              ),
             };
 
             const newItems = [...updatedItems, newProduct];
@@ -120,9 +134,11 @@ const useCartStore = create<CartState>()(
             return {
               items: newItems,
               totalItems: state.totalItems + product.quantity,
-              totalPrice: newItems.reduce(
-                (sum, item) => sum + item.price * item.quantity,
-                0
+              totalPrice: formatPrice(
+                newItems.reduce(
+                  (sum, item) => sum + item.price * item.quantity,
+                  0
+                )
               ),
               totalBags,
               totalPouch,
@@ -176,10 +192,16 @@ const useCartStore = create<CartState>()(
           // Cập nhật giá của tất cả sản phẩm theo loại
           const finalItems = updatedItems.map((item) => {
             if (item.type === "bag") {
-              return { ...item, price: item.backup_price * bagDiscountRate };
+              return {
+                ...item,
+                price: formatPrice(item.backup_price * bagDiscountRate),
+              };
             }
             if (item.type === "pouch") {
-              return { ...item, price: item.backup_price * pouchDiscountRate };
+              return {
+                ...item,
+                price: formatPrice(item.backup_price * pouchDiscountRate),
+              };
             }
             return item;
           });
@@ -187,9 +209,11 @@ const useCartStore = create<CartState>()(
           return {
             items: finalItems,
             totalItems: state.totalItems + quantityDifference,
-            totalPrice: finalItems.reduce(
-              (sum, item) => sum + item.price * item.quantity,
-              0
+            totalPrice: formatPrice(
+              finalItems.reduce(
+                (sum, item) => sum + item.price * item.quantity,
+                0
+              )
             ),
             totalBags,
             totalPouch,
@@ -236,10 +260,16 @@ const useCartStore = create<CartState>()(
           // Cập nhật giá của tất cả sản phẩm còn lại theo loại
           const finalItems = updatedItems.map((item) => {
             if (item.type === "bag") {
-              return { ...item, price: item.backup_price * bagDiscountRate };
+              return {
+                ...item,
+                price: formatPrice(item.backup_price * bagDiscountRate),
+              };
             }
             if (item.type === "pouch") {
-              return { ...item, price: item.backup_price * pouchDiscountRate };
+              return {
+                ...item,
+                price: formatPrice(item.backup_price * pouchDiscountRate),
+              };
             }
             return item;
           });
@@ -247,9 +277,11 @@ const useCartStore = create<CartState>()(
           return {
             items: finalItems,
             totalItems: state.totalItems - itemToRemove.quantity,
-            totalPrice: finalItems.reduce(
-              (sum, item) => sum + item.price * item.quantity,
-              0
+            totalPrice: formatPrice(
+              finalItems.reduce(
+                (sum, item) => sum + item.price * item.quantity,
+                0
+              )
             ),
             totalBags,
             totalPouch,

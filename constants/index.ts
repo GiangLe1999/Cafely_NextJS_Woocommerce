@@ -1,6 +1,6 @@
 export const pouch_discount = {
-  rate_1: 0.07,
-  rate_2: 0.14,
+  rate_1: 0.93,
+  rate_2: 0.86,
   quantity_1: 2,
   quantity_2: 4,
 };
