@@ -8,10 +8,12 @@ interface Product {
   name: string;
   regular_price: number;
   price: number;
+  backup_price: number;
   is_beans: boolean;
   slug: string;
   quantity: number;
   image?: string;
+  type: string;
 }
 
 // Định nghĩa kiểu dữ liệu cho state của giỏ hàng
@@ -19,6 +21,8 @@ interface CartState {
   items: Product[];
   totalItems: number;
   totalPrice: number;
+  totalBags: number;
+  totalPouch: number;
 
   // Các action
   addItem: (item: Product) => void;
@@ -34,6 +38,8 @@ const useCartStore = create<CartState>()(
       items: [],
       totalItems: 0,
       totalPrice: 0,
+      totalBags: 0,
+      totalPouch: 0,
 
       addItem: (product) =>
         set((state) => {
@@ -41,41 +47,80 @@ const useCartStore = create<CartState>()(
             (item) => item.id === product.id
           );
 
+          let totalBags = state.totalBags;
+          let totalPouch = state.totalPouch;
+
+          if (product.type === "bag") totalBags += product.quantity;
+          if (product.type === "pouch") totalPouch += product.quantity;
+
+          // Xác định discountRate cho bag
+          let bagDiscountRate = 1;
+          if (totalBags >= 3 && totalBags < 6) {
+            bagDiscountRate = 0.94;
+          } else if (totalBags >= 6) {
+            bagDiscountRate = 0.88;
+          }
+
+          // Xác định discountRate cho pouch
+          let pouchDiscountRate = 1;
+          if (totalPouch >= 2 && totalPouch < 4) {
+            pouchDiscountRate = 0.93;
+          } else if (totalPouch >= 4) {
+            pouchDiscountRate = 0.86;
+          }
+
+          // Cập nhật giá của tất cả sản phẩm theo loại
+          const updatedItems = state.items.map((item) => {
+            if (item.type === "bag") {
+              return { ...item, price: item.backup_price * bagDiscountRate };
+            }
+            if (item.type === "pouch") {
+              return { ...item, price: item.backup_price * pouchDiscountRate };
+            }
+            return item;
+          });
+
           if (existingItem) {
-            // Nếu sản phẩm đã tồn tại, tăng số lượng
-            const updatedItems = state.items.map((item) =>
+            const newItems = updatedItems.map((item) =>
               item.id === product.id
                 ? { ...item, quantity: item.quantity + product.quantity }
                 : item
             );
 
             return {
-              items: updatedItems,
+              items: newItems,
               totalItems: state.totalItems + product.quantity,
-              totalPrice: state.totalPrice + product.price * product.quantity,
+              totalPrice: newItems.reduce(
+                (sum, item) => sum + item.price * item.quantity,
+                0
+              ),
+              totalBags,
+              totalPouch,
             };
           } else {
-            // Nếu là sản phẩm mới, thêm vào giỏ hàng
+            const newProduct = {
+              ...product,
+              price:
+                product.type === "bag"
+                  ? product.backup_price * bagDiscountRate
+                  : product.type === "pouch"
+                  ? product.backup_price * pouchDiscountRate
+                  : product.price,
+            };
+
+            const newItems = [...updatedItems, newProduct];
+
             return {
-              items: [...state.items, product],
+              items: newItems,
               totalItems: state.totalItems + product.quantity,
-              totalPrice: state.totalPrice + product.price * product.quantity,
+              totalPrice: newItems.reduce(
+                (sum, item) => sum + item.price * item.quantity,
+                0
+              ),
+              totalBags,
+              totalPouch,
             };
           }
-        }),
-
-      removeItem: (itemId) =>
-        set((state) => {
-          const itemToRemove = state.items.find((item) => item.id === itemId);
-
-          if (!itemToRemove) return state;
-
-          return {
-            items: state.items.filter((item) => item.id !== itemId),
-            totalItems: state.totalItems - itemToRemove.quantity,
-            totalPrice:
-              state.totalPrice - itemToRemove.price * itemToRemove.quantity,
-          };
         }),
 
       updateQuantity: (itemId, newQuantity) =>
@@ -86,18 +131,109 @@ const useCartStore = create<CartState>()(
 
           const quantityDifference = newQuantity - itemToUpdate.quantity;
 
+          let totalBags = state.totalBags;
+          let totalPouch = state.totalPouch;
+
+          if (itemToUpdate.type === "bag") totalBags += quantityDifference;
+          if (itemToUpdate.type === "pouch") totalPouch += quantityDifference;
+
+          // Xác định discountRate cho bag
+          let bagDiscountRate = 1;
+          if (totalBags >= 3 && totalBags < 6) {
+            bagDiscountRate = 0.94;
+          } else if (totalBags >= 6) {
+            bagDiscountRate = 0.88;
+          }
+
+          // Xác định discountRate cho pouch
+          let pouchDiscountRate = 1;
+          if (totalPouch >= 2 && totalPouch < 4) {
+            pouchDiscountRate = 0.93;
+          } else if (totalPouch >= 4) {
+            pouchDiscountRate = 0.86;
+          }
+
           const updatedItems =
             newQuantity > 0
               ? state.items.map((item) =>
                   item.id === itemId ? { ...item, quantity: newQuantity } : item
                 )
-              : state.items.filter((item) => item.id !== itemId); // Remove item if quantity is 0
+              : state.items.filter((item) => item.id !== itemId);
+
+          // Cập nhật giá của tất cả sản phẩm theo loại
+          const finalItems = updatedItems.map((item) => {
+            if (item.type === "bag") {
+              return { ...item, price: item.backup_price * bagDiscountRate };
+            }
+            if (item.type === "pouch") {
+              return { ...item, price: item.backup_price * pouchDiscountRate };
+            }
+            return item;
+          });
 
           return {
-            items: updatedItems,
+            items: finalItems,
             totalItems: state.totalItems + quantityDifference,
-            totalPrice:
-              state.totalPrice + itemToUpdate.price * quantityDifference,
+            totalPrice: finalItems.reduce(
+              (sum, item) => sum + item.price * item.quantity,
+              0
+            ),
+            totalBags,
+            totalPouch,
+          };
+        }),
+
+      removeItem: (itemId) =>
+        set((state) => {
+          const itemToRemove = state.items.find((item) => item.id === itemId);
+
+          if (!itemToRemove) return state;
+
+          let totalBags = state.totalBags;
+          let totalPouch = state.totalPouch;
+
+          if (itemToRemove.type === "bag") totalBags -= itemToRemove.quantity;
+          if (itemToRemove.type === "pouch")
+            totalPouch -= itemToRemove.quantity;
+
+          // Xác định discountRate mới cho bag
+          let bagDiscountRate = 1;
+          if (totalBags >= 3 && totalBags < 6) {
+            bagDiscountRate = 0.94;
+          } else if (totalBags >= 6) {
+            bagDiscountRate = 0.88;
+          }
+
+          // Xác định discountRate mới cho pouch
+          let pouchDiscountRate = 1;
+          if (totalPouch >= 2 && totalPouch < 4) {
+            pouchDiscountRate = 0.93;
+          } else if (totalPouch >= 4) {
+            pouchDiscountRate = 0.86;
+          }
+
+          const updatedItems = state.items.filter((item) => item.id !== itemId);
+
+          // Cập nhật giá của tất cả sản phẩm còn lại theo loại
+          const finalItems = updatedItems.map((item) => {
+            if (item.type === "bag") {
+              return { ...item, price: item.backup_price * bagDiscountRate };
+            }
+            if (item.type === "pouch") {
+              return { ...item, price: item.backup_price * pouchDiscountRate };
+            }
+            return item;
+          });
+
+          return {
+            items: finalItems,
+            totalItems: state.totalItems - itemToRemove.quantity,
+            totalPrice: finalItems.reduce(
+              (sum, item) => sum + item.price * item.quantity,
+              0
+            ),
+            totalBags,
+            totalPouch,
           };
         }),
 
@@ -106,11 +242,13 @@ const useCartStore = create<CartState>()(
           items: [],
           totalItems: 0,
           totalPrice: 0,
+          totalBags: 0,
+          totalPouch: 0,
         }),
     }),
     {
-      name: "cart-storage", // tên key trong localStorage
-      skipHydration: true, // để tránh lỗi hydration trong NextJS
+      name: "cart-storage",
+      skipHydration: true,
     }
   )
 );

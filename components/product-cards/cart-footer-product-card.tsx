@@ -11,7 +11,9 @@ interface Props {
 }
 
 const CartFooterProductCard: FC<Props> = ({ product }): JSX.Element => {
-  const { addItem } = useCartStore();
+  const { addItem, totalPouch, totalBags } = useCartStore();
+
+  console.log(totalBags, totalPouch);
 
   // Memoize is_beans to prevent unnecessary recalculations
   const is_beans = useMemo(() => {
@@ -28,10 +30,14 @@ const CartFooterProductCard: FC<Props> = ({ product }): JSX.Element => {
       name: product.name,
       regular_price: parseFloat(product.regular_price),
       price: parseFloat(product?.sale_price || product.regular_price),
+      backup_price: parseFloat(product?.sale_price || product.regular_price),
       is_beans,
       slug: product.slug,
       quantity: 1,
       image: product.images?.[0]?.src ?? "",
+      type:
+        product.attributes.find((a: ProductAttribute) => a.name === "type")
+          ?.options[0] || "combo",
     });
   }, [product, addItem, is_beans]);
 

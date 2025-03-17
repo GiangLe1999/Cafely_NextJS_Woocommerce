@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import useCartStore from "@/lib/stores/useCartStore";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, JSX, useEffect } from "react";
@@ -14,14 +14,21 @@ const CartProductsList: FC = (): JSX.Element => {
   }, []);
 
   return (
-    <>
+    <div className="p-4 flex-1 h-full overflow-auto">
       {items.length > 0 ? (
         <div className="space-y-4">
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex w-full flex-col gap-y-2.5 rounded-2xl border border-app-lavender p-4"
+              className="relative flex w-full flex-col gap-y-2.5 rounded-2xl border border-app-lavender p-4"
             >
+              <button
+                className="absolute top-4 right-4 text-red-500 z-10"
+                onClick={() => removeItem(item.id)}
+              >
+                <Trash2Icon className="h-[18px] w-[18px]" />
+              </button>
+
               <div className="flex flex-row gap-x-4">
                 {item.image && (
                   <div className="relative h-24 w-24 flex-initial flex-shrink-0 overflow-hidden rounded-lg bg-light_pink md:rounded-xl">
@@ -44,9 +51,9 @@ const CartProductsList: FC = (): JSX.Element => {
                       </Link>
                     </h3>
                     <div className="mt-1 flex items-center justify-between gap-2 leading-none">
-                      {item.is_beans && (
-                        <div className="text-xs text-[#9e7e6d]">Beans</div>
-                      )}
+                      <div className="text-xs text-[#9e7e6d]">
+                        {item.is_beans ? "Beans" : ""}
+                      </div>
 
                       <div>
                         {item.regular_price !== item.price ? (
@@ -68,6 +75,7 @@ const CartProductsList: FC = (): JSX.Element => {
                   </div>
 
                   <div className="flex flex-row items-center justify-between gap-2">
+                    {/* Plus or minus */}
                     <div className="inline-flex flex-initial items-center justify-between rounded-full bg-light_pink p-0.5 text-center text-sm font-bold text-app-brown">
                       <button
                         className="rounded-full bg-white leading-none h-8 w-8"
@@ -90,12 +98,15 @@ const CartProductsList: FC = (): JSX.Element => {
                       </button>
                     </div>
 
-                    <button
-                      className="ml-4 text-red-500"
-                      onClick={() => removeItem(item.id)}
-                    >
-                      Xóa
-                    </button>
+                    {/* See product button */}
+                    <Button className="rounded-[12px] h-9 group p-0 flex-1">
+                      <Link
+                        className="text-[13px] w-full h-full font-bold text-brown group-hover:text-white transition duration-500 px-6 py-[7.5px]"
+                        href={`/products/${item.slug}`}
+                      >
+                        See Product and Buy
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -119,7 +130,7 @@ const CartProductsList: FC = (): JSX.Element => {
           </Button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

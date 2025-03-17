@@ -55,15 +55,11 @@ const Cart: FC<Props> = ({
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex-1">
-          <FreeShippingProgress freeShippPercents={33} />
+        <FreeShippingProgress freeShippPercents={33} />
 
-          <div className="p-4">
-            <CartProductsList />
-          </div>
-        </div>
+        <CartProductsList />
 
-        <SheetFooter className="pt-3 pb-4 px-4 sm:justify-start border-t">
+        <SheetFooter className="pt-3 pb-0 sm:justify-start border-t block">
           <CartFooter />
         </SheetFooter>
       </SheetContent>
