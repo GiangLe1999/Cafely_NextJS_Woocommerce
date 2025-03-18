@@ -13,9 +13,38 @@ import CartFooterProductCard from "../../../product-cards/cart-footer-product-ca
 import useCartStore from "@/lib/stores/useCartStore";
 import { Button } from "@/components/ui/button";
 import LockIcon from "@/components/icons/lock";
+import { bag_discount, pouch_discount } from "@/constants";
+import { formatPrice } from "@/lib/utils";
 
 const CartFooter: FC = (): JSX.Element => {
-  const { totalItems, totalPrice } = useCartStore();
+  const { totalItems, totalPrice, items, totalBags, totalPouches } =
+    useCartStore();
+
+  const discountForBags =
+    totalBags >= bag_discount.quantity_1
+      ? formatPrice(
+          items
+            .filter((item) => item.type === "bag")
+            .reduce(
+              (acc, item) =>
+                (acc + (item.backup_price - item.price)) * item.quantity,
+              0
+            )
+        )
+      : 0;
+
+  const discountForPouches =
+    totalPouches >= pouch_discount.quantity_1
+      ? formatPrice(
+          items
+            .filter((item) => item.type === "pouch")
+            .reduce(
+              (acc, item) =>
+                (acc + (item.backup_price - item.price)) * item.quantity,
+              0
+            )
+        )
+      : 0;
 
   const { data, isLoading } = useQuery({
     queryKey: ["allProducts"],
@@ -57,17 +86,54 @@ const CartFooter: FC = (): JSX.Element => {
         </Carousel>
       </div>
 
-      <div className="px-4 py-3">
-        <div className="space-y-1 mb-4">
-          <div className="flex items-center gap-1 justify-between">
-            <p className="text-[#89695c] text-[13px] font-medium">Discount</p>
-          </div>
-          <div className="flex items-center gap-1 justify-between">
-            <p className="text-[#89695c] text-[13px] font-medium">
-              Subtitle ({totalItems} items)
-            </p>
+      <div className="px-4 py-4">
+        <div className="space-y-[5px] mb-4">
+          {totalBags >= bag_discount.quantity_1 && (
+            <div className="flex items-center gap-1 justify-between">
+              <div className="flex items-center gap-1">
+                <span className="text-[#89695c] text-[13px] font-medium">
+                  Discount
+                </span>
+                <span className="ml-0.5 rounded-[6px] bg-[#fdba74] px-2 py-0.5 align-middle text-2xs font-bold text-brown md:text-xs">
+                  {totalBags < bag_discount.quantity_2
+                    ? `${bag_discount.quantity_1} BAGS`
+                    : `${bag_discount.quantity_2} BAGS`}
+                </span>
+              </div>
 
-            <p>{totalPrice}</p>
+              <span className="font-bold text-[13px] text-brown">
+                -${discountForBags}
+              </span>
+            </div>
+          )}
+
+          {totalPouches >= pouch_discount.quantity_1 && (
+            <div className="flex items-center gap-1 justify-between">
+              <div className="flex items-center gap-1">
+                <span className="text-[#89695c] text-[13px] font-medium">
+                  Discount
+                </span>
+                <span className="ml-0.5 rounded-[6px] bg-[#fdba74] px-2 py-0.5 align-middle text-2xs font-bold text-brown md:text-xs">
+                  {totalPouches < pouch_discount.quantity_2
+                    ? `${pouch_discount.quantity_1} POUCHES`
+                    : `${pouch_discount.quantity_2} POUCHES`}
+                </span>
+              </div>
+
+              <span className="font-bold text-[13px] text-brown">
+                -${discountForPouches}
+              </span>
+            </div>
+          )}
+
+          <div className="flex items-center gap-1 justify-between">
+            <span className="text-[#89695c] text-[13px] font-medium">
+              Subtitle ({totalItems} items)
+            </span>
+
+            <span className="font-bold text-[13px] text-primary">
+              ${totalPrice}
+            </span>
           </div>
         </div>
 

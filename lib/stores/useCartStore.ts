@@ -2,6 +2,7 @@
 import { bag_discount, pouch_discount } from "@/constants";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { formatPrice } from "../utils";
 
 // Định nghĩa kiểu dữ liệu cho sản phẩm
 interface Product {
@@ -23,7 +24,7 @@ interface CartState {
   totalItems: number;
   totalPrice: number;
   totalBags: number;
-  totalPouch: number;
+  totalPouches: number;
 
   // Các action
   addItem: (item: Product) => void;
@@ -31,11 +32,6 @@ interface CartState {
   updateQuantity: (itemId: number, quantity: number) => void;
   clearCart: () => void;
 }
-
-// Hàm format số thành số có 2 chữ số thập phân
-const formatPrice = (price: number): number => {
-  return parseFloat(price.toFixed(2));
-};
 
 // Tạo store với zustand và sử dụng middleware persist để lưu vào localStorage
 const useCartStore = create<CartState>()(
@@ -45,7 +41,7 @@ const useCartStore = create<CartState>()(
       totalItems: 0,
       totalPrice: 0,
       totalBags: 0,
-      totalPouch: 0,
+      totalPouches: 0,
 
       addItem: (product) =>
         set((state) => {
@@ -54,10 +50,10 @@ const useCartStore = create<CartState>()(
           );
 
           let totalBags = state.totalBags;
-          let totalPouch = state.totalPouch;
+          let totalPouches = state.totalPouches;
 
           if (product.type === "bag") totalBags += product.quantity;
-          if (product.type === "pouch") totalPouch += product.quantity;
+          if (product.type === "pouch") totalPouches += product.quantity;
 
           // Xác định discountRate cho bag
           let bagDiscountRate = 1;
@@ -73,11 +69,11 @@ const useCartStore = create<CartState>()(
           // Xác định discountRate cho pouch
           let pouchDiscountRate = 1;
           if (
-            totalPouch >= pouch_discount.quantity_1 &&
-            totalPouch < pouch_discount.quantity_2
+            totalPouches >= pouch_discount.quantity_1 &&
+            totalPouches < pouch_discount.quantity_2
           ) {
             pouchDiscountRate = pouch_discount.rate_1;
-          } else if (totalPouch >= pouch_discount.quantity_2) {
+          } else if (totalPouches >= pouch_discount.quantity_2) {
             pouchDiscountRate = pouch_discount.rate_2;
           }
 
@@ -115,7 +111,7 @@ const useCartStore = create<CartState>()(
                 )
               ),
               totalBags,
-              totalPouch,
+              totalPouches,
             };
           } else {
             const newProduct = {
@@ -141,7 +137,7 @@ const useCartStore = create<CartState>()(
                 )
               ),
               totalBags,
-              totalPouch,
+              totalPouches,
             };
           }
         }),
@@ -155,10 +151,10 @@ const useCartStore = create<CartState>()(
           const quantityDifference = newQuantity - itemToUpdate.quantity;
 
           let totalBags = state.totalBags;
-          let totalPouch = state.totalPouch;
+          let totalPouches = state.totalPouches;
 
           if (itemToUpdate.type === "bag") totalBags += quantityDifference;
-          if (itemToUpdate.type === "pouch") totalPouch += quantityDifference;
+          if (itemToUpdate.type === "pouch") totalPouches += quantityDifference;
 
           // Xác định discountRate cho bag
           let bagDiscountRate = 1;
@@ -174,11 +170,11 @@ const useCartStore = create<CartState>()(
           // Xác định discountRate cho pouch
           let pouchDiscountRate = 1;
           if (
-            totalPouch >= pouch_discount.quantity_1 &&
-            totalPouch < pouch_discount.quantity_2
+            totalPouches >= pouch_discount.quantity_1 &&
+            totalPouches < pouch_discount.quantity_2
           ) {
             pouchDiscountRate = pouch_discount.rate_1;
-          } else if (totalPouch >= pouch_discount.quantity_2) {
+          } else if (totalPouches >= pouch_discount.quantity_2) {
             pouchDiscountRate = pouch_discount.rate_2;
           }
 
@@ -216,7 +212,7 @@ const useCartStore = create<CartState>()(
               )
             ),
             totalBags,
-            totalPouch,
+            totalPouches,
           };
         }),
 
@@ -227,11 +223,11 @@ const useCartStore = create<CartState>()(
           if (!itemToRemove) return state;
 
           let totalBags = state.totalBags;
-          let totalPouch = state.totalPouch;
+          let totalPouches = state.totalPouches;
 
           if (itemToRemove.type === "bag") totalBags -= itemToRemove.quantity;
           if (itemToRemove.type === "pouch")
-            totalPouch -= itemToRemove.quantity;
+            totalPouches -= itemToRemove.quantity;
 
           // Xác định discountRate mới cho bag
           let bagDiscountRate = 1;
@@ -247,11 +243,11 @@ const useCartStore = create<CartState>()(
           // Xác định discountRate mới cho pouch
           let pouchDiscountRate = 1;
           if (
-            totalPouch >= pouch_discount.quantity_1 &&
-            totalPouch < pouch_discount.quantity_2
+            totalPouches >= pouch_discount.quantity_1 &&
+            totalPouches < pouch_discount.quantity_2
           ) {
             pouchDiscountRate = pouch_discount.rate_1;
-          } else if (totalPouch >= pouch_discount.quantity_2) {
+          } else if (totalPouches >= pouch_discount.quantity_2) {
             pouchDiscountRate = pouch_discount.rate_2;
           }
 
@@ -284,7 +280,7 @@ const useCartStore = create<CartState>()(
               )
             ),
             totalBags,
-            totalPouch,
+            totalPouches,
           };
         }),
 
@@ -294,7 +290,7 @@ const useCartStore = create<CartState>()(
           totalItems: 0,
           totalPrice: 0,
           totalBags: 0,
-          totalPouch: 0,
+          totalPouches: 0,
         }),
     }),
     {

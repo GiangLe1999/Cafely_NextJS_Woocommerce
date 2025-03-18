@@ -11,9 +11,7 @@ interface Props {
 }
 
 const CartFooterProductCard: FC<Props> = ({ product }): JSX.Element => {
-  const { addItem, totalPouch, totalBags } = useCartStore();
-
-  console.log(totalBags, totalPouch);
+  const { addItem } = useCartStore();
 
   // Memoize is_beans to prevent unnecessary recalculations
   const is_beans = useMemo(() => {

@@ -7,7 +7,13 @@ import axios from "axios";
 // Products
 export const getAllProducts = async () => {
   try {
-    const response = await wooClient.get("/products");
+    const response = await wooClient.get("/products", {
+      params: {
+        per_page: 20,
+        status: "publish",
+      },
+    });
+
     return response.data;
   } catch (error) {
     return {
