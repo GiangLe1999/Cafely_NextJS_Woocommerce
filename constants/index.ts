@@ -10,3 +10,4 @@ export const bag_discount = {
   quantity_1: 3,
   quantity_2: 6,
 };
+export const free_shipping_threshold = 49;

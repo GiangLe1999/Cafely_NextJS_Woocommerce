@@ -56,7 +56,7 @@ const Cart: FC<Props> = ({
           </SheetTitle>
         </SheetHeader>
 
-        <FreeShippingProgress freeShippPercents={33} />
+        <FreeShippingProgress />
 
         <CartProductsList />
 
