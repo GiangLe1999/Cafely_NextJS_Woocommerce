@@ -10,9 +10,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import FreeShippingProgress from "./free-shipping-progress";
-import CartFooter from "./cart-footer";
 import CartProductsList from "./cart-products-list";
 import useCartStore from "@/lib/stores/useCartStore";
+import CartFooterCarousel from "./cart-footer-carousel";
+import CartFooterCalculator from "./cart-footer-calculator";
 
 interface Props {
   getTextColor: () => string;
@@ -60,7 +61,8 @@ const Cart: FC<Props> = ({
         <CartProductsList />
 
         <SheetFooter className="pt-3 pb-0 sm:justify-start border-t block">
-          <CartFooter />
+          <CartFooterCarousel />
+          <CartFooterCalculator />
         </SheetFooter>
       </SheetContent>
     </Sheet>
