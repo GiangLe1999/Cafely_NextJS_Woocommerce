@@ -45,7 +45,7 @@ const Cart: FC<Props> = ({
               "transition-all duration-400 absolute w-4 aspect-square -top-1 right-[-5px] rounded-full text-[10px] font-mono grid place-items-center"
             )}
           >
-            0
+            {totalItems}
           </span>
         </div>
       </SheetTrigger>

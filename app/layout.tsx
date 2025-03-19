@@ -4,6 +4,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import QueryProvider from "@/components/providers/query-provider";
+import NextAuthProviders from "@/components/providers/next-auth-provider";
 
 const ppSans = localFont({
   src: [
@@ -37,7 +38,9 @@ export default function RootLayout({
         className={cn(figtree.className, ppSans.variable, "antialiased")}
         suppressHydrationWarning
       >
-        <QueryProvider>{children}</QueryProvider>
+        <NextAuthProviders>
+          <QueryProvider>{children}</QueryProvider>
+        </NextAuthProviders>
       </body>
     </html>
   );

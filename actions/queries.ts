@@ -1,5 +1,6 @@
 "use server";
 
+import { getSession } from "next-auth/react";
 import { getErrorMessage } from "@/ultils/get-error-message";
 import wooClient from "@/ultils/woo-client";
 import axios from "axios";
@@ -64,6 +65,41 @@ export const get3BestSellers = async () => {
 export const getAllCategories = async () => {
   try {
     const response = await wooClient.get("/products/categories");
+    return response.data;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};
+
+// Authenticated querries
+export const woocommerceAPI = async (
+  endpoint: string,
+  method: string = "GET",
+  data?: any
+) => {
+  const session: any = await getSession();
+
+  if (!session || !session.wooToken) {
+    throw new Error("User not authenticated");
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${session.wooToken}`,
+  };
+
+  const url = `${process.env.WC_BASE_URL}/${endpoint}`;
+
+  try {
+    const response = await axios({
+      method,
+      url,
+      headers,
+      data,
+    });
+
     return response.data;
   } catch (error) {
     return {

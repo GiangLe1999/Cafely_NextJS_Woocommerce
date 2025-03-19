@@ -20,7 +20,7 @@ const CartFooterCarousel: FC = (): JSX.Element => {
 
   return (
     <div className="w-full px-4 pb-5">
-      <h4 className="text-xs font-bold text-light_brown mb-4">
+      <h4 className="text-[13px] font-bold text-light_brown mb-3">
         Complete coffee routine
       </h4>
       <Carousel
