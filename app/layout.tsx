@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import QueryProvider from "@/components/providers/query-provider";
 import NextAuthProviders from "@/components/providers/next-auth-provider";
+import CustomToaster from "@/components/ui/custom-toaster";
 
 const ppSans = localFont({
   src: [
@@ -39,7 +40,10 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <NextAuthProviders>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+            <CustomToaster />
+          </QueryProvider>
         </NextAuthProviders>
       </body>
     </html>

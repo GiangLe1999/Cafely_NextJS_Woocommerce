@@ -2,207 +2,186 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { createNewUser } from "@/actions/actions";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { createNewUser } from "@/actions/actions";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
 
-interface FormData {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+// Define form validation schema with optional first_name and last_name
+const formSchema = z.object({
+  first_name: z.string().optional(),
+  last_name: z.string().optional(),
+  email: z.string().email("Email không hợp lệ"),
+  password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+});
 
 export default function RegisterForm() {
-  const [formData, setFormData] = useState<FormData>({
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  // Initialize form
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Form submission handler
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    setError("");
-
-    // Kiểm tra tất cả trường bắt buộc
-    if (
-      !formData.first_name ||
-      !formData.last_name ||
-      !formData.email ||
-      !formData.password
-    ) {
-      setError("Vui lòng điền đầy đủ họ, tên, email và mật khẩu");
-      setLoading(false);
-      return;
-    }
-
-    // Kiểm tra mật khẩu khớp nhau
-    if (formData.password !== formData.confirmPassword) {
-      setError("Mật khẩu xác nhận không khớp");
-      setLoading(false);
-      return;
-    }
 
     try {
       const response = await createNewUser({
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        email: formData.email,
-        password: formData.password,
+        first_name: values.first_name || "",
+        last_name: values.last_name || "",
+        email: values.email,
+        password: values.password,
       });
 
       if (!response.error) {
+        await signIn("credentials", {
+          email: values.email,
+          password: values.password,
+          redirect: false,
+        });
         router.push("/");
       } else {
-        // setError(response.error || "Đăng ký thất bại. Vui lòng thử lại.");
+        toast.error(response.error || "Đăng ký thất bại.", {
+          description: "Vui lòng thử lại.",
+        });
       }
     } catch (error) {
       console.error(error);
-      setError("Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại sau.");
+      toast.error("Đã xảy ra lỗi khi đăng ký.", {
+        description: "Vui lòng thử lại sau.",
+      });
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
-    <div className="max-w-md mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold text-center mb-6">
-        Đăng ký tài khoản mới
+    <div className="max-w-md mx-auto bg-white">
+      <h1 className="text-2xl leading-[60px] font-bold text-center font-pp_sans text-primary text-[60px] uppercase mt-[42px] mb-8">
+        Create account
       </h1>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>
-      )}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="first_name"
+            render={({ field }) => (
+              <FormItem className="space-y-[5px]">
+                <FormLabel className="uppercase text-[10px] font-bold text-brown">
+                  First Name
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
+                    placeholder="First Name"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label
-              htmlFor="first_name"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Tên <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="first_name"
-              name="first_name"
-              value={formData.first_name}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="last_name"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Họ <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="last_name"
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-        </div>
+          <FormField
+            control={form.control}
+            name="last_name"
+            render={({ field }) => (
+              <FormItem className="space-y-[5px]">
+                <FormLabel className="uppercase text-[10px] font-bold text-brown">
+                  Last Name
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
+                    placeholder="Last Name"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            Email <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="email"
-            id="email"
+          <FormField
+            control={form.control}
             name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
+            render={({ field }) => (
+              <FormItem className="space-y-[5px]">
+                <FormLabel className="uppercase text-[10px] font-bold text-brown">
+                  Email <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
+                    placeholder="Email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="password"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            Mật khẩu <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="password"
-            id="password"
+          <FormField
+            control={form.control}
             name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-            minLength={6}
+            render={({ field }) => (
+              <FormItem className="space-y-[5px]">
+                <FormLabel className="uppercase text-[10px] font-bold text-brown">
+                  Password <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
+                    placeholder="Password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <p className="text-sm text-gray-500 mt-1">
-            Mật khẩu phải có ít nhất 6 ký tự
-          </p>
-        </div>
 
-        <div className="mb-6">
-          <label
-            htmlFor="confirmPassword"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            Xác nhận mật khẩu <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        <div className="mb-6">
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50"
-          >
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Đang xử lý..." : "Đăng ký"}
-          </button>
-        </div>
+          </Button>
 
-        <div className="text-center">
-          <p className="text-gray-600">
-            Đã có tài khoản?{" "}
-            <Link href="/auth/signin" className="text-blue-500 hover:underline">
-              Đăng nhập
-            </Link>
-          </p>
-        </div>
-      </form>
+          <div className="text-center pt-4">
+            <p className="text-gray-600">
+              Đã có tài khoản?{" "}
+              <Link
+                href="/auth/signin"
+                className="text-blue-500 hover:underline"
+              >
+                Đăng nhập
+              </Link>
+            </p>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }
