@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-// import { useRouter } from "next/router";
 import Link from "next/link";
 import { createNewUser } from "@/actions/actions";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   first_name: string;
@@ -23,7 +23,7 @@ export default function RegisterForm() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  // const router = useRouter();
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -65,10 +65,10 @@ export default function RegisterForm() {
         password: formData.password,
       });
 
-      if (response.status === 200) {
-        // router.push("/auth/signin?registered=true");
+      if (!response.error) {
+        router.push("/");
       } else {
-        setError(response.error || "Đăng ký thất bại. Vui lòng thử lại.");
+        // setError(response.error || "Đăng ký thất bại. Vui lòng thử lại.");
       }
     } catch (error) {
       console.error(error);

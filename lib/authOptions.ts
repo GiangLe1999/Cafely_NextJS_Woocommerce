@@ -1,34 +1,27 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
+import { getUserForLogin } from "@/actions/queries";
+import { NextAuthOptions } from "next-auth";
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "WooCommerce",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
+      name: "credentials",
+      credentials: {},
+      async authorize(credentials: any) {
         try {
           // Gọi API WooCommerce để xác thực
-          const response = await axios.post(
-            `${process.env.WORDPRESS_URL}/wp-json/jwt-auth/v1/token`,
-            {
-              username: credentials?.email,
-              password: credentials?.password,
-            }
-          );
-
-          const user = response.data;
+          const user = await getUserForLogin({
+            email: credentials?.email || "",
+            password: credentials?.password || "",
+          });
 
           if (user) {
             // Trả về user object với token
             return {
-              id: user.user_id,
-              name: user.user_display_name,
-              email: user.user_email,
-              token: user.token,
+              id: user.id,
+              first_name: user.first_name,
+              last_name: user.last_name,
+              email: user.email,
             };
           }
 
@@ -42,23 +35,28 @@ export const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user }: any) {
-      // Lưu token JWT từ WooCommerce vào NextAuth JWT
+      // Nếu user đăng nhập, cập nhật thông tin user vào token
       if (user) {
-        token.accessToken = user.token;
-        token.userId = user.id;
+        token.id = user.id;
+        token.first_name = user.first_name;
+        token.last_name = user.last_name;
+        token.email = user.email;
       }
       return token;
     },
     async session({ session, token }: any) {
-      // Gửi thông tin token đến client
-      session.accessToken = token.accessToken;
-      session.userId = token.userId;
+      // Truyền dữ liệu từ token vào session để gửi đến client
+      session.user = {
+        id: token.id,
+        first_name: token.first_name,
+        last_name: token.last_name,
+        email: token.email,
+      };
       return session;
     },
   },
   pages: {
     signIn: "/account/login",
-    signUp: "/account/register",
   },
   session: {
     strategy: "jwt",
