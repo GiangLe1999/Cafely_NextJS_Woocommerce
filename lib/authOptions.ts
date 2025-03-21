@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
             password: credentials?.password || "",
           });
 
-          if (user) {
+          if (user.email) {
             // Trả về user object với token
             return {
               id: user.id,
