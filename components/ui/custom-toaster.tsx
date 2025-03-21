@@ -10,7 +10,7 @@ import { Toaster } from "@/components/ui/sonner";
 const CustomToaster: FC = (): JSX.Element => {
   return (
     <Toaster
-      position="top-right"
+      position="bottom-right"
       toastOptions={{
         classNames: {
           error:

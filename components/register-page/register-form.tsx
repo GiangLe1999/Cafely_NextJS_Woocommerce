@@ -19,13 +19,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
+import LoadingSpinner from "../ui/loading-spinner";
 
 // Define form validation schema with optional first_name and last_name
 const formSchema = z.object({
   first_name: z.string().optional(),
   last_name: z.string().optional(),
-  email: z.string().email("Email không hợp lệ"),
-  password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 
 export default function RegisterForm() {
@@ -131,7 +132,7 @@ export default function RegisterForm() {
             render={({ field }) => (
               <FormItem className="space-y-[5px]">
                 <FormLabel className="uppercase text-[10px] font-bold text-brown">
-                  Email <span className="text-red-500">*</span>
+                  Email
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -151,7 +152,7 @@ export default function RegisterForm() {
             render={({ field }) => (
               <FormItem className="space-y-[5px]">
                 <FormLabel className="uppercase text-[10px] font-bold text-brown">
-                  Password <span className="text-red-500">*</span>
+                  Password
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -165,20 +166,42 @@ export default function RegisterForm() {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Đang xử lý..." : "Đăng ký"}
-          </Button>
+          <div className="flex justify-center pt-4">
+            <Button
+              type="submit"
+              className="w-fit font-bold text-brown h-12 px-[32px] rounded-[12px] text-base"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <LoadingSpinner className="w-5 h-5" /> Processing...
+                </>
+              ) : (
+                "Submit"
+              )}
+            </Button>
+          </div>
 
-          <div className="text-center pt-4">
-            <p className="text-gray-600">
-              Đã có tài khoản?{" "}
-              <Link
-                href="/auth/signin"
-                className="text-blue-500 hover:underline"
-              >
-                Đăng nhập
-              </Link>
-            </p>
+          <div className="text-center pt-3 text-[13px]">
+            <span className="text-brown font-medium">
+              Already have an account?{" "}
+            </span>
+
+            <Link
+              href="/account/login"
+              className="text-primary font-semibold underline"
+            >
+              Login
+            </Link>
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/account/forgot-password"
+              className="text-center text-[13px] text-primary font-semibold underline"
+            >
+              Forgot Password?
+            </Link>
           </div>
         </form>
       </Form>
