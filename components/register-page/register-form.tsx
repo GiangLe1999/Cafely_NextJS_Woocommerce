@@ -64,14 +64,14 @@ export default function RegisterForm() {
         });
         router.push("/");
       } else {
-        toast.error(response.error || "Đăng ký thất bại.", {
-          description: "Vui lòng thử lại.",
+        toast.error(response.error || "Registration failed.", {
+          description: "Please try again.",
         });
       }
     } catch (error) {
       console.error(error);
-      toast.error("Đã xảy ra lỗi khi đăng ký.", {
-        description: "Vui lòng thử lại sau.",
+      toast.error("An error occurred during registration.", {
+        description: "Please try again later.",
       });
     } finally {
       setLoading(false);
@@ -156,6 +156,7 @@ export default function RegisterForm() {
                 </FormLabel>
                 <FormControl>
                   <Input
+                    type="password"
                     className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
                     placeholder="Password"
                     {...field}

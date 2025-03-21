@@ -11,13 +11,19 @@ import Search from "./search";
 import { Product } from "@/types/product";
 import { ChevronDown, SearchIcon } from "lucide-react";
 import Cart from "./cart";
+import { Session } from "next-auth";
 
 interface Props {
   categories: Category[];
   threeBestSellers: Product[];
+  session: Session | null;
 }
 
-const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
+const HeaderContent: FC<Props> = ({
+  categories,
+  threeBestSellers,
+  session,
+}) => {
   const pathname = usePathname();
   const isHomepage = pathname === "/";
   const [isScrolled, setIsScrolled] = useState(!isHomepage);
@@ -119,15 +125,27 @@ const HeaderContent: FC<Props> = ({ categories, threeBestSellers }) => {
 
         {/* Right side */}
         <div className="flex items-center justify-end gap-x-6">
-          <Link
-            href="/account/login"
-            className={cn(
-              "font-semibold transition-color duration-400 text-sm",
-              getTextColor()
-            )}
-          >
-            Log In
-          </Link>
+          {session ? (
+            <Link
+              className={cn(
+                "font-semibold transition-color duration-400 text-sm",
+                getTextColor()
+              )}
+              href="/account"
+            >
+              My Account
+            </Link>
+          ) : (
+            <Link
+              href="/account/login"
+              className={cn(
+                "font-semibold transition-color duration-400 text-sm",
+                getTextColor()
+              )}
+            >
+              Log In
+            </Link>
+          )}
 
           <div aria-label="Search">
             <SearchIcon

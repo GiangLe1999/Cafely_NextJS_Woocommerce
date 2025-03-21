@@ -3,133 +3,157 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-// import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import LoadingSpinner from "../ui/loading-spinner";
+import { useRouter } from "next/navigation";
+
+// Define form validation schema
+const formSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
 
 export default function LoginForm() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  // const router = useRouter();
+  const router = useRouter();
 
-  // Kiểm tra xem người dùng mới đăng ký thành công hay không
-  // const { registered } = router.query;
+  // Initialize form
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Form submission handler
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    setError("");
 
     try {
       const result = await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
+        email: values.email,
+        password: values.password,
         redirect: false,
       });
 
       if (result?.error) {
-        setError("Email hoặc mật khẩu không chính xác");
+        toast.error("Email or password is incorrect.", {
+          description: "Please try again.",
+        });
       } else {
-        // Đăng nhập thành công, chuyển hướng đến trang chủ hoặc trang trước đó
-        // const returnUrl = (router.query.callbackUrl as string) || "/";
-        // router.push(returnUrl);
+        router.push("/");
       }
     } catch (error) {
       console.error(error);
-      setError("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
+      toast.error("An error occurred while logging in.", {
+        description: "Please try again.",
+      });
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
-    <div className="max-w-md mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold text-center mb-6">Đăng nhập</h1>
+    <div className="max-w-md mx-auto bg-white">
+      <h1 className="text-2xl leading-[60px] font-bold text-center font-pp_sans text-primary text-[60px] uppercase mt-[42px] mb-10">
+        Welcome Back
+      </h1>
 
-      {/* {registered && (
-        <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
-          Đăng ký thành công! Vui lòng đăng nhập với tài khoản của bạn.
-        </div>
-      )} */}
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
             name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
+            render={({ field }) => (
+              <FormItem className="space-y-[5px]">
+                <FormLabel className="uppercase text-[10px] font-bold text-brown">
+                  Email
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
+                    placeholder="Email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div className="mb-6">
-          <label
-            htmlFor="password"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            Mật khẩu
-          </label>
-          <input
-            type="password"
-            id="password"
+          <FormField
+            control={form.control}
             name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
+            render={({ field }) => (
+              <FormItem className="space-y-[5px]">
+                <FormLabel className="uppercase text-[10px] font-bold text-brown">
+                  Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
+                    placeholder="Password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div className="mb-6">
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50"
-          >
-            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
-          </button>
-        </div>
-
-        <div className="text-center">
-          <p className="text-gray-600">
-            Chưa có tài khoản?{" "}
-            <Link href="/auth/signup" className="text-blue-500 hover:underline">
-              Đăng ký ngay
-            </Link>
-          </p>
-          <p className="mt-2">
+          <div className="!mt-2">
             <Link
-              href="/auth/forgot-password"
-              className="text-blue-500 hover:underline"
+              href="/account/forgot-password"
+              className="text-center text-[13px] text-primary font-semibold underline"
             >
-              Quên mật khẩu?
+              Forgot Password?
             </Link>
-          </p>
-        </div>
-      </form>
+          </div>
+
+          <div className="flex justify-center pt-4">
+            <Button
+              type="submit"
+              className="w-fit font-bold text-brown h-12 px-[32px] rounded-[12px] text-base"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <LoadingSpinner className="w-5 h-5" /> Processing...
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
+          </div>
+
+          <div className="text-center pt-3 text-[13px]">
+            <span className="text-brown font-medium">New to CAFELY? </span>
+
+            <Link
+              href="/account/register"
+              className="text-primary font-semibold underline"
+            >
+              Register Now
+            </Link>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }
