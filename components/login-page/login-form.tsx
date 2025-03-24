@@ -56,6 +56,9 @@ export default function LoginForm() {
           description: "Please try again.",
         });
       } else {
+        toast.success("Login successful.", {
+          description: "You are now logged in.",
+        });
         router.push("/");
       }
     } catch (error) {
@@ -129,7 +132,7 @@ export default function LoginForm() {
           <div className="flex justify-center pt-4">
             <Button
               type="submit"
-              className="w-fit font-bold text-brown h-12 px-[32px] rounded-[12px] text-base"
+              className="w-fit font-bold h-12 px-[32px] text-base"
               disabled={loading}
             >
               {loading ? (

@@ -87,7 +87,7 @@ const Menu: FC<Props> = ({ categories, showMenu }): JSX.Element => {
             </ul>
           </div>
 
-          <Button className="w-full rounded-[12px] h-[49px] group p-0">
+          <Button className="w-full h-[49px] group p-0">
             <Link
               className="flex w-full text-base h-full items-center justify-between gap-1 font-bold text-foreground group-hover:text-white transition duration-500 px-6 py-3"
               href="/collections/all"
@@ -123,7 +123,7 @@ const Menu: FC<Props> = ({ categories, showMenu }): JSX.Element => {
             perfect match.
           </p>
 
-          <Button className="w-full h-[49px] rounded-[12px] group py-0">
+          <Button className="w-full h-[49px] group py-0">
             <Link
               className="flex text-base w-full h-full items-center justify-between gap-1 font-bold text-foreground group-hover:text-white transition duration-500 px-6 py-3"
               href="/pages/quiz"

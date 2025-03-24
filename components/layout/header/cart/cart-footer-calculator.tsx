@@ -88,7 +88,7 @@ const CartFooterCalculator: FC = (): JSX.Element | null => {
         </div>
       </div>
 
-      <Button className="rounded-[12px] w-full bg-primary text-white h-12 text-base font-bold">
+      <Button className="w-full bg-primary text-white h-12 text-base font-bold">
         <LockIcon className="!w-[13px] !h-[15px] mt-[-1px]" /> Secure Checkout
       </Button>
 

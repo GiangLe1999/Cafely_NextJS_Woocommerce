@@ -62,6 +62,9 @@ export default function RegisterForm() {
           password: values.password,
           redirect: false,
         });
+        toast.success("Login successful.", {
+          description: "You are now logged in.",
+        });
         router.push("/");
       } else {
         toast.error(response.error || "Registration failed.", {
@@ -170,7 +173,7 @@ export default function RegisterForm() {
           <div className="flex justify-center pt-4">
             <Button
               type="submit"
-              className="w-fit font-bold text-brown h-12 px-[32px] rounded-[12px] text-base"
+              className="w-fit font-bold h-12 px-[32px] text-base"
               disabled={loading}
             >
               {loading ? (

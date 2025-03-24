@@ -99,7 +99,7 @@ const CartProductsList: FC = (): JSX.Element => {
                     </div>
 
                     {/* See product button */}
-                    <Button className="rounded-[12px] h-9 group p-0 flex-1">
+                    <Button className="h-9 group p-0 flex-1">
                       <Link
                         className="text-[13px] w-full h-full font-bold text-brown group-hover:text-white transition duration-500 px-6 py-[7.5px]"
                         href={`/products/${item.slug}`}
@@ -119,7 +119,7 @@ const CartProductsList: FC = (): JSX.Element => {
             Your cart is currently empty.
           </h2>
 
-          <Button className="rounded-[12px] h-[49px] group p-0 mt-6">
+          <Button className="h-[49px] group p-0 mt-6">
             <Link
               className="flex gap-x-8 text-base w-full h-full items-center justify-between font-bold text-foreground group-hover:text-white transition duration-500 px-6 py-3"
               href="/collections"

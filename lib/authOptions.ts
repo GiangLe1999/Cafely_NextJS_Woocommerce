@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
           if (user.email) {
             // Trả về user object với token
             return {
-              id: user.id,
+              id: parseInt(user.id, 10),
               first_name: user.first_name,
               last_name: user.last_name,
               email: user.email,
@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }: any) {
       // Nếu user đăng nhập, cập nhật thông tin user vào token
       if (user) {
-        token.id = user.id;
+        token.id = parseInt(user.id, 10);
         token.first_name = user.first_name;
         token.last_name = user.last_name;
         token.email = user.email;
@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }: any) {
       // Truyền dữ liệu từ token vào session để gửi đến client
       session.user = {
-        id: token.id,
+        id: parseInt(token.id, 10),
         first_name: token.first_name,
         last_name: token.last_name,
         email: token.email,

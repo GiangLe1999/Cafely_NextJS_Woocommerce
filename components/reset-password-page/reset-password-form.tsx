@@ -140,7 +140,7 @@ export default function ResetPasswordForm({ token }: Props) {
           <div className="flex justify-center pt-4">
             <Button
               type="submit"
-              className="w-fit font-bold text-brown h-12 px-[32px] rounded-[12px] text-base"
+              className="w-fit font-bold h-12 px-[32px] text-base"
               disabled={loading}
             >
               {loading ? (

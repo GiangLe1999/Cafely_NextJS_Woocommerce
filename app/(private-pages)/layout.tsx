@@ -18,7 +18,7 @@ const PrivatePagesLayout: FC<Props> = async ({
   return (
     <>
       <Header />
-      {children}
+      <div className="container mt-[70px] pt-[32px] pb-[72px]">{children}</div>
     </>
   );
 };
