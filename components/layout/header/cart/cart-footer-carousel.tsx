@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { Product } from "@/types/product";
 import CartFooterProductCard from "../../../product-cards/cart-footer-product-card";
-import { getAllProducts } from "@/actions/queries";
+import { getAllProducts } from "@/queries/product.query";
 import { useQuery } from "@tanstack/react-query";
 
 const CartFooterCarousel: FC = (): JSX.Element => {

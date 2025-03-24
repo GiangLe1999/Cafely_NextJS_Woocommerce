@@ -67,3 +67,34 @@ export const forgotPassword = async (email: string) => {
     };
   }
 };
+
+export const resetPassword = async ({
+  token,
+  newPassword,
+}: {
+  token: string;
+  newPassword: string;
+}) => {
+  try {
+    const response = await axios.post(
+      `${process.env.BACKEND_BASE_URL}/custom/v1/reset-password`,
+      {
+        token,
+        newPassword,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      // Xử lý lỗi từ API
+      return {
+        error: error.response.data.message || getErrorMessage(error),
+      };
+    }
+
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};

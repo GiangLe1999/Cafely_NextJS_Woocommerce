@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "../ui/loading-spinner";
-import { forgotPassword } from "@/actions/actions";
+import { forgotPassword } from "@/actions/auth.action";
 
 // Define form validation schema
 const formSchema = z.object({
@@ -42,8 +42,6 @@ export default function ForgotPasswordForm() {
 
     try {
       const response = await forgotPassword(values.email);
-
-      console.log(response);
 
       if (!response.error) {
         toast.success("Email sent successfully.", {

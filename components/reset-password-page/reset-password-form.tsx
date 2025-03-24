@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { createNewUser } from "@/actions/auth.action";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,19 +17,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signIn } from "next-auth/react";
-import { toast } from "sonner";
 import LoadingSpinner from "../ui/loading-spinner";
+import { resetPassword } from "@/actions/auth.action";
+import { useRouter } from "next/navigation";
 
-// Define form validation schema with optional first_name and last_name
-const formSchema = z.object({
-  first_name: z.string().optional(),
-  last_name: z.string().optional(),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-});
+// Define form validation schema
+const formSchema = z
+  .object({
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirm_password: z.string(),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    message: "Passwords do not match",
+    path: ["confirm_password"],
+  });
 
-export default function RegisterForm() {
+interface Props {
+  token: string | "";
+}
+
+export default function ResetPasswordForm({ token }: Props) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -37,10 +44,8 @@ export default function RegisterForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      first_name: "",
-      last_name: "",
-      email: "",
       password: "",
+      confirm_password: "",
     },
   });
 
@@ -49,28 +54,24 @@ export default function RegisterForm() {
     setLoading(true);
 
     try {
-      const response = await createNewUser({
-        first_name: values.first_name || "",
-        last_name: values.last_name || "",
-        email: values.email,
-        password: values.password,
+      const response = await resetPassword({
+        token,
+        newPassword: values.password,
       });
-
       if (!response.error) {
-        await signIn("credentials", {
-          email: values.email,
-          password: values.password,
-          redirect: false,
+        toast.success("Password reset successfully.", {
+          description: "You can now log in with your new password.",
         });
-        router.push("/");
+
+        router.replace("/account/login");
       } else {
-        toast.error(response.error || "Registration failed.", {
+        toast.error(response.error || "Failed to reset password.", {
           description: "Please try again.",
         });
       }
     } catch (error) {
       console.error(error);
-      toast.error("An error occurred during registration.", {
+      toast.error("An error occurred while resetting your password.", {
         description: "Please try again later.",
       });
     } finally {
@@ -78,74 +79,22 @@ export default function RegisterForm() {
     }
   }
 
+  if (token === "") {
+    return <div>Invalid token</div>;
+  }
+
   return (
     <div className="max-w-md mx-auto bg-white">
-      <h1 className="text-2xl leading-[60px] font-bold text-center font-pp_sans text-primary text-[60px] uppercase mt-[42px] mb-8">
-        Create account
+      <h1 className="text-2xl leading-[72px] font-bold text-center font-pp_sans text-primary text-[72px] uppercase mt-[42px] mb-6">
+        Reset account password
       </h1>
+
+      <p className="text-center font-medium text-brown mb-8">
+        Enter a new password
+      </p>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="first_name"
-            render={({ field }) => (
-              <FormItem className="space-y-[5px]">
-                <FormLabel className="uppercase text-[10px] font-bold text-brown">
-                  First Name
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
-                    placeholder="First Name"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="last_name"
-            render={({ field }) => (
-              <FormItem className="space-y-[5px]">
-                <FormLabel className="uppercase text-[10px] font-bold text-brown">
-                  Last Name
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
-                    placeholder="Last Name"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem className="space-y-[5px]">
-                <FormLabel className="uppercase text-[10px] font-bold text-brown">
-                  Email
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
-                    placeholder="Email"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <FormField
             control={form.control}
             name="password"
@@ -159,6 +108,27 @@ export default function RegisterForm() {
                     type="password"
                     className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
                     placeholder="Password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirm_password"
+            render={({ field }) => (
+              <FormItem className="space-y-[5px]">
+                <FormLabel className="uppercase text-[10px] font-bold text-brown">
+                  Confirm password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
+                    placeholder="Confirm password"
                     {...field}
                   />
                 </FormControl>
@@ -184,24 +154,11 @@ export default function RegisterForm() {
           </div>
 
           <div className="text-center pt-3 text-[13px]">
-            <span className="text-brown font-medium">
-              Already have an account?{" "}
-            </span>
-
             <Link
               href="/account/login"
               className="text-primary font-semibold underline"
             >
-              Login
-            </Link>
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/account/forgot-password"
-              className="text-center text-[13px] text-primary font-semibold underline"
-            >
-              Forgot Password?
+              Cancel
             </Link>
           </div>
         </form>

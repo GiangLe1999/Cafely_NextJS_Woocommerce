@@ -3,7 +3,7 @@ import { ArrowRight, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebouce";
-import { getSearchResults } from "@/actions/queries";
+import { getSearchResults } from "@/queries/product.query";
 import { SearchedPost, SearchedProduct } from "@/types/searched-results";
 import { Product } from "@/types/product";
 import SearchedProductCard from "@/components/product-cards/searched-product-card";
