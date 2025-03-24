@@ -11,7 +11,7 @@ const UserAddressList: FC<Props> = ({
   user_id,
 }): JSX.Element => {
   return (
-    <div className="text-center mt-[54px]">
+    <div className="mt-[54px]">
       <ul className="text-brown space-y-8">
         {!userAddresses?.error &&
           userAddresses?.map((userAddress: any) => (

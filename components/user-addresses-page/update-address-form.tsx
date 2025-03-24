@@ -23,58 +23,43 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { statesAndProvinces, countries } from "@/constants";
-import { createNewUserAddress } from "@/actions/user-address.action";
+import { updateUserAddress } from "@/actions/user-address.action";
 import { toast } from "sonner";
 import LoadingSpinner from "../ui/loading-spinner";
+import { addressFormSchema } from "./add-new-address-form";
 
 interface Props {
-  setShowAddNewAddressForm: React.Dispatch<React.SetStateAction<boolean>>;
+  userAddress: any;
+  setShowUpdateAddressForm: React.Dispatch<React.SetStateAction<boolean>>;
   user_id: number;
+  onAddressUpdated?: () => void;
 }
-
-// Schema validation
-export const addressFormSchema = z.object({
-  firstName: z.string().min(1, { message: "Please enter your first name" }),
-  lastName: z.string().min(1, { message: "Please enter your last name" }),
-  company: z.string().optional(),
-  address1: z.string().min(1, { message: "Please enter your address" }),
-  address2: z.string().optional(),
-  city: z.string().min(1, { message: "Please enter your city" }),
-  countryRegion: z
-    .string()
-    .min(1, { message: "Please select a country/region" }),
-  stateProvince: z
-    .string()
-    .min(1, { message: "Please select a state/province" }),
-  postalZipCode: z
-    .string()
-    .min(1, { message: "Please enter a postal/ZIP code" }),
-  phone: z.string().min(1, { message: "Please enter your phone number" }),
-  isDefault: z.boolean().default(false),
-});
 
 type AddressFormValues = z.infer<typeof addressFormSchema>;
 
-export default function AddNewAddressForm({
-  setShowAddNewAddressForm,
+export default function UpdateAddressForm({
+  userAddress,
+  setShowUpdateAddressForm,
   user_id,
+  onAddressUpdated,
 }: Props) {
   const [loading, setLoading] = React.useState(false);
 
+  // Initialize the form with existing address data
   const form = useForm<AddressFormValues>({
     resolver: zodResolver(addressFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      company: "",
-      address1: "",
-      address2: "",
-      city: "",
-      countryRegion: "United States",
-      stateProvince: "Alabama",
-      postalZipCode: "",
-      phone: "",
-      isDefault: false,
+      firstName: userAddress.first_name,
+      lastName: userAddress.last_name,
+      company: userAddress?.company || "",
+      address1: userAddress.address_line1,
+      address2: userAddress?.address_line2 || "",
+      city: userAddress.city,
+      countryRegion: userAddress.country,
+      stateProvince: userAddress.state,
+      postalZipCode: userAddress.postcode,
+      phone: userAddress.phone,
+      isDefault: userAddress.is_default == "1" ? true : false,
     },
   });
 
@@ -82,7 +67,8 @@ export default function AddNewAddressForm({
     setLoading(true);
 
     try {
-      const response = await createNewUserAddress({
+      const response = await updateUserAddress({
+        address_id: userAddress.id,
         user_id,
         first_name: values.firstName,
         last_name: values.lastName,
@@ -98,19 +84,22 @@ export default function AddNewAddressForm({
       });
 
       if (!response.error) {
-        toast.success("Address added successfully.", {
-          description: "Your new address has been saved.",
+        toast.success("Address updated successfully.", {
+          description: "Your address has been saved.",
         });
-        setShowAddNewAddressForm(false);
-        form.reset();
+        setShowUpdateAddressForm(false);
+        // Refresh address data in parent component if callback provided
+        if (onAddressUpdated) {
+          onAddressUpdated();
+        }
       } else {
-        toast.error(response.error || "Failed to add address.", {
+        toast.error(response.error || "Failed to update address.", {
           description: "Please try again.",
         });
       }
     } catch (error) {
       console.error(error);
-      toast.error("An error occurred while adding the address.", {
+      toast.error("An error occurred while updating the address.", {
         description: "Please try again later.",
       });
     } finally {
@@ -119,13 +108,12 @@ export default function AddNewAddressForm({
   }
 
   function onCancel() {
-    form.reset();
-    setShowAddNewAddressForm(false);
+    setShowUpdateAddressForm(false);
   }
 
   return (
-    <div className="mx-auto mt-10">
-      <h2 className="text-brown text-xl font-bold mb-4">Add new address</h2>
+    <div className="mx-auto mt-8">
+      <h2 className="text-brown text-xl font-bold mb-4">Edit address</h2>
 
       <div>
         <Form {...form}>
@@ -260,7 +248,7 @@ export default function AddNewAddressForm({
                   </FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={countries[0].value}
+                    defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger className="rounded-[10px] h-[46.5px] border-2 border-border shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium">
@@ -290,7 +278,7 @@ export default function AddNewAddressForm({
                   </FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={statesAndProvinces[0].value}
+                    defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger className="rounded-[10px] h-[46.5px] border-2 border-border shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium">
@@ -380,7 +368,7 @@ export default function AddNewAddressForm({
                     <LoadingSpinner className="w-5 h-5" /> Processing...
                   </>
                 ) : (
-                  "Add address"
+                  "Update address"
                 )}
               </Button>
               <Button

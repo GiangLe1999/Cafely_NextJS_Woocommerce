@@ -2,6 +2,7 @@ import { FC, JSX, useState } from "react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { deleteUserAddress } from "@/actions/user-address.action";
+import UpdateAddressForm from "./update-address-form";
 
 interface Props {
   userAddress: any;
@@ -10,6 +11,7 @@ interface Props {
 
 const UserAddress: FC<Props> = ({ userAddress, user_id }): JSX.Element => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showEditAddressForm, setShowEditAddressForm] = useState(false);
 
   const askForDeleteAddress = () => {
     if (confirm("Are you sure you wish to delete this address?")) {
@@ -48,11 +50,11 @@ const UserAddress: FC<Props> = ({ userAddress, user_id }): JSX.Element => {
   return (
     <>
       {userAddress.is_default == "1" && (
-        <h2 className="text-base font-bold md:text-lg lg:text-xl mb-3 md:mb-4">
+        <h2 className="text-base font-bold md:text-lg lg:text-xl mb-3 md:mb-4 text-center">
           Default
         </h2>
       )}
-      <p className="leading-6">
+      <p className="leading-6 text-center">
         {userAddress.first_name} {userAddress.last_name} <br />
         {userAddress?.company && (
           <>
@@ -71,7 +73,11 @@ const UserAddress: FC<Props> = ({ userAddress, user_id }): JSX.Element => {
       </p>
 
       <div className="flex items-center justify-center gap-[14px] mt-2 text-primary font-medium underline underline-offset-4">
-        <Button variant="link" className="px-0 text-[13px]" onClick={() => {}}>
+        <Button
+          variant="link"
+          className="px-0 text-[13px]"
+          onClick={() => setShowEditAddressForm(!showEditAddressForm)}
+        >
           Edit Address
         </Button>
 
@@ -83,6 +89,14 @@ const UserAddress: FC<Props> = ({ userAddress, user_id }): JSX.Element => {
           {isDeleting ? "Deleting..." : "Delete Address"}
         </Button>
       </div>
+
+      {showEditAddressForm && (
+        <UpdateAddressForm
+          userAddress={userAddress}
+          user_id={user_id}
+          setShowUpdateAddressForm={setShowEditAddressForm}
+        />
+      )}
     </>
   );
 };

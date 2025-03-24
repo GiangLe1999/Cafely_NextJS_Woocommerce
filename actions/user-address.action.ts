@@ -83,3 +83,46 @@ export const deleteUserAddress = async ({
     };
   }
 };
+
+export const updateUserAddress = async (data: {
+  address_id: number;
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  company?: string;
+  address_1: string;
+  address_2?: string;
+  city: string;
+  state_province: string;
+  country_region: string;
+  postal_zip_code: string;
+  phone: string;
+  is_default: boolean;
+}) => {
+  try {
+    // Gọi API tùy chỉnh để tạo user mới sử dụng axios
+    const response = await axios.post(
+      `${process.env.BACKEND_BASE_URL}/custom/v1/update-address`,
+      data
+    );
+
+    const result = response.data;
+
+    if (!result?.error) {
+      revalidatePath("/account/addresses");
+    }
+
+    return result;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      // Xử lý lỗi từ API
+      return {
+        error: error.response.data.message || getErrorMessage(error),
+      };
+    }
+
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};
