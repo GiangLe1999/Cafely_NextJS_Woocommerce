@@ -43,3 +43,27 @@ export const createNewUser = async ({
     };
   }
 };
+
+export const forgotPassword = async (email: string) => {
+  try {
+    const response = await axios.post(
+      `${process.env.BACKEND_BASE_URL}/custom/v1/forgot-password`,
+      {
+        email,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      // Xử lý lỗi từ API
+      return {
+        error: error.response.data.message || getErrorMessage(error),
+      };
+    }
+
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};

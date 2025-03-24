@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,24 +18,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "../ui/loading-spinner";
-import { useRouter } from "next/navigation";
+import { forgotPassword } from "@/actions/actions";
 
 // Define form validation schema
 const formSchema = z.object({
   email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 
 export default function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   // Initialize form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
@@ -45,23 +41,23 @@ export default function ForgotPasswordForm() {
     setLoading(true);
 
     try {
-      const result = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-      });
+      const response = await forgotPassword(values.email);
 
-      if (result?.error) {
-        toast.error("Email or password is incorrect.", {
-          description: "Please try again.",
+      console.log(response);
+
+      if (!response.error) {
+        toast.success("Email sent successfully.", {
+          description: "Check your inbox for further instructions.",
         });
       } else {
-        router.push("/");
+        toast.error(response.error || "Failed to send email.", {
+          description: "Please try again.",
+        });
       }
     } catch (error) {
       console.error(error);
-      toast.error("An error occurred while logging in.", {
-        description: "Please try again.",
+      toast.error("An error occurred during sending the email.", {
+        description: "Please try again later.",
       });
     } finally {
       setLoading(false);
@@ -70,9 +66,14 @@ export default function ForgotPasswordForm() {
 
   return (
     <div className="max-w-md mx-auto bg-white">
-      <h1 className="text-2xl leading-[60px] font-bold text-center font-pp_sans text-primary text-[60px] uppercase mt-[42px] mb-10">
-        Welcome Back
+      <h1 className="text-2xl leading-[72px] font-bold text-center font-pp_sans text-primary text-[72px] uppercase mt-[42px] mb-6">
+        Reset password
       </h1>
+
+      <p className="text-center font-medium text-brown mb-8">
+        Enter your email address below and check your inbox for instructions to
+        reset your password.
+      </p>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -82,12 +83,12 @@ export default function ForgotPasswordForm() {
             render={({ field }) => (
               <FormItem className="space-y-[5px]">
                 <FormLabel className="uppercase text-[10px] font-bold text-brown">
-                  Email
+                  Enter your email
                 </FormLabel>
                 <FormControl>
                   <Input
                     className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
-                    placeholder="Email"
+                    placeholder="Enter your email"
                     {...field}
                   />
                 </FormControl>
@@ -95,36 +96,6 @@ export default function ForgotPasswordForm() {
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem className="space-y-[5px]">
-                <FormLabel className="uppercase text-[10px] font-bold text-brown">
-                  Password
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    className="rounded-[10px] h-[46.5px] border-2 shadow-none placeholder:font-medium placeholder:!text-[15px] text-brown !text-base font-medium"
-                    placeholder="Password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="!mt-2">
-            <Link
-              href="/account/forgot-password"
-              className="text-center text-[13px] text-primary font-semibold underline"
-            >
-              Forgot Password?
-            </Link>
-          </div>
 
           <div className="flex justify-center pt-4">
             <Button
@@ -137,19 +108,17 @@ export default function ForgotPasswordForm() {
                   <LoadingSpinner className="w-5 h-5" /> Processing...
                 </>
               ) : (
-                "Sign In"
+                "Submit"
               )}
             </Button>
           </div>
 
           <div className="text-center pt-3 text-[13px]">
-            <span className="text-brown font-medium">New to CAFELY? </span>
-
             <Link
-              href="/account/register"
+              href="/account/login"
               className="text-primary font-semibold underline"
             >
-              Register Now
+              Cancel
             </Link>
           </div>
         </form>
