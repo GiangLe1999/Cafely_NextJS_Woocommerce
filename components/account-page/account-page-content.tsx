@@ -83,12 +83,19 @@ export default function AccountPageContent() {
                 <div className="text-sm md:text-base mb-4">
                   {defaultAddress?.first_name} {defaultAddress?.last_name}{" "}
                   <br />
-                  {defaultAddress?.company}
+                  {defaultAddress?.company && (
+                    <>
+                      {defaultAddress?.company} <br />
+                    </>
+                  )}
+                  {defaultAddress?.address_line1}
                   <br />
-                  {defaultAddress?.address_1}
-                  <br />
-                  {defaultAddress?.address_2}
-                  <br />
+                  {defaultAddress?.address_line2 && (
+                    <>
+                      {defaultAddress?.address_line2}
+                      <br />
+                    </>
+                  )}
                   {defaultAddress?.city}, {defaultAddress?.state}{" "}
                   {defaultAddress?.postcode}
                   <br />

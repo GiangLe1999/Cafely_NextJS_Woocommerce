@@ -1,3 +1,4 @@
+import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import { FC, JSX, ReactNode } from "react";
 
@@ -9,7 +10,8 @@ const PublicPagesLayout: FC<Props> = ({ children }): JSX.Element => {
   return (
     <>
       <Header />
-      <main className="h-[2000px]">{children}</main>
+      <div className="container mt-[70px] pt-[32px] pb-[72px]">{children}</div>
+      <Footer />
     </>
   );
 };

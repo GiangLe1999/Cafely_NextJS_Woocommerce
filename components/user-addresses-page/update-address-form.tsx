@@ -32,7 +32,6 @@ interface Props {
   userAddress: any;
   setShowUpdateAddressForm: React.Dispatch<React.SetStateAction<boolean>>;
   user_id: number;
-  onAddressUpdated?: () => void;
 }
 
 type AddressFormValues = z.infer<typeof addressFormSchema>;
@@ -41,7 +40,6 @@ export default function UpdateAddressForm({
   userAddress,
   setShowUpdateAddressForm,
   user_id,
-  onAddressUpdated,
 }: Props) {
   const [loading, setLoading] = React.useState(false);
 
@@ -89,9 +87,6 @@ export default function UpdateAddressForm({
         });
         setShowUpdateAddressForm(false);
         // Refresh address data in parent component if callback provided
-        if (onAddressUpdated) {
-          onAddressUpdated();
-        }
       } else {
         toast.error(response.error || "Failed to update address.", {
           description: "Please try again.",
