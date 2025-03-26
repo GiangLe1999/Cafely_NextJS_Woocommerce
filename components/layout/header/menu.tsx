@@ -12,7 +12,7 @@ interface Props {
 }
 
 const listItemClass =
-  "text-[15px] font-medium relative after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-foreground after:duration-300 after:ease-in-out hover:after:w-full";
+  "text-[15px] font-medium relative after:absolute after:w-0 after:h-[2px] after:bottom-[-2px] after:left-0 after:bg-foreground after:duration-400 after:ease-in-out hover:after:w-full after:bg-brown text-brown";
 
 const Menu: FC<Props> = ({ categories, showMenu }): JSX.Element => {
   return (

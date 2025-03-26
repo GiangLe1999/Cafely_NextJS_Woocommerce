@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
 import { deleteSubscriber } from "@/actions/subscriber.action";
+import { useRouter } from "next/navigation";
 
 interface Props {
   token: string | "";
@@ -13,6 +14,7 @@ interface Props {
 
 const UnsubscribePageContent: FC<Props> = ({ token }): JSX.Element => {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   async function onSubmit() {
     setLoading(true);
@@ -24,6 +26,7 @@ const UnsubscribePageContent: FC<Props> = ({ token }): JSX.Element => {
         toast.success("Unsubscribed successfully.", {
           description: `${response?.email} have been removed.`,
         });
+        router.replace("/");
       } else {
         toast.error(response.error || "Failed to unsubscribe.", {
           description: "Please try again or contact support.",
