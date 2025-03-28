@@ -72,6 +72,15 @@ export default {
       transitionDuration: {
         400: "400ms",
       },
+      keyframes: {
+        flip: {
+          "0%, 66%, 100%": { transform: "rotateY(0deg)" },
+          "33%": { transform: "rotateY(180deg)" },
+        },
+      },
+      animation: {
+        flip: "flip 2s cubic-bezier(.175,.885,.32,1.275) infinite",
+      },
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports

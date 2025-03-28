@@ -1,8 +1,10 @@
+"use client";
+
 import { Progress } from "@/components/ui/progress";
 import { FC, JSX, useState, useEffect } from "react";
 
-const DURATION = 4000; // 4 giây
-const INTERVAL = 100; // Cập nhật mỗi 10ms
+const DURATION = 4000;
+const INTERVAL = 200;
 
 interface Props {
   isShowing: boolean;
@@ -45,7 +47,8 @@ const CarouselItemProgress: FC<Props> = ({
   return (
     <Progress
       value={value}
-      className="w-full bg-white/25 h-[3px] rounded-none"
+      className="w-full bg-white/25 h-[2px] rounded-none"
+      indicatorColor="bg-white"
     />
   );
 };
