@@ -17,6 +17,23 @@ const ppSans = localFont({
   variable: "--font-pp-sans",
 });
 
+const moret = localFont({
+  src: [
+    {
+      path: "../public/fonts/Moret-Book.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Moret-Regular.woff",
+      weight: "500",
+      style: "normal",
+    },
+  ],
+  display: "swap",
+  variable: "--font-moret",
+});
+
 const figtree = Figtree({
   variable: "--font-open-sans",
   subsets: ["latin"],
@@ -36,7 +53,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(figtree.className, ppSans.variable, "antialiased")}
+        className={cn(
+          figtree.className,
+          ppSans.variable,
+          moret.variable,
+          "antialiased"
+        )}
         suppressHydrationWarning
       >
         <NextAuthProviders>

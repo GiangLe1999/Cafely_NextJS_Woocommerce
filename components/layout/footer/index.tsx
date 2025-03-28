@@ -1,3 +1,5 @@
+"use client";
+
 import { FC, JSX } from "react";
 import SubscribeForm from "./subscribe-form";
 import Link from "next/link";
@@ -13,13 +15,17 @@ import GooglePayIcon from "@/components/icons/google-pay";
 import MasterCardIcon from "@/components/icons/mastercard";
 import ShopPayIcon from "@/components/icons/shop-pay";
 import VisaIcon from "@/components/icons/visa";
+import { usePathname } from "next/navigation";
 
 const footerLinkClassnames =
   "relative after:absolute after:w-0 after:h-[2px] after:bottom-[-2px] after:left-0 after:bg-foreground after:duration-400 after:ease-in-out hover:after:w-full after:transition-all after:bg-primary";
 
 const Footer: FC = (): JSX.Element => {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   return (
-    <footer>
+    <footer className={isHome ? "" : "border-t border-app-lavender"}>
       <div className="container py-6 lg:py-10">
         <div className="flex flex-row flex-wrap rounded-[20px] bg-light_pink px-4 pb-6 pt-8 sm:px-6 md:px-8 lg:gap-x-4 lg:gap-y-24 lg:rounded-[28px] lg:px-10 lg:pb-8 lg:pt-10">
           <div className="grid w-full grid-cols-1 lg:grid-cols-[380px_auto] lg:gap-x-14 lg:gap-y-8 xl:gap-x-36">

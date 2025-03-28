@@ -6,17 +6,22 @@ import "@smastrom/react-rating/style.css";
 
 const myStyles = {
   itemShapes: ThinStar,
-  activeFillColor: "#F7BC2F",
   inactiveFillColor: "#D5D5D5",
 };
 
 interface Props {
+  activeFillColor?: string;
   value: number;
   readonly?: boolean;
   onChange?: (value: number) => void;
 }
 
-export const Rating: FC<Props> = ({ value, readonly, onChange }) => {
+export const Rating: FC<Props> = ({
+  value,
+  readonly,
+  onChange,
+  activeFillColor = "#F7BC2F",
+}) => {
   const [rating, setRating] = useState(value);
 
   useEffect(() => {
@@ -29,7 +34,7 @@ export const Rating: FC<Props> = ({ value, readonly, onChange }) => {
       value={rating}
       onChange={setRating}
       readOnly={readonly}
-      itemStyles={myStyles}
+      itemStyles={{ ...myStyles, activeFillColor }}
     />
   );
 };

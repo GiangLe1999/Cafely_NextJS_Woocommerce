@@ -1,11 +1,10 @@
-import Header from "@/components/layout/header";
+import Hero from "@/components/home-page/hero";
 import { NextPage } from "next";
 
 const Home: NextPage = () => {
   return (
     <>
-      <Header />
-      Hello
+      <Hero />
     </>
   );
 };

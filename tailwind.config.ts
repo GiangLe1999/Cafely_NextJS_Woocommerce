@@ -10,6 +10,7 @@ export default {
     extend: {
       fontFamily: {
         pp_sans: ["var(--font-pp-sans)"],
+        moret: ["var(--font-moret)"],
       },
       colors: {
         background: "hsl(var(--background))",

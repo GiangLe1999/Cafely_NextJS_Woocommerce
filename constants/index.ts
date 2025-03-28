@@ -86,3 +86,10 @@ export const statesAndProvinces = [
   { value: "Saskatchewan", label: "Saskatchewan" },
   { value: "Yukon", label: "Yukon" },
 ];
+
+export const homePageHeroBanners = [
+  "/images/home/hero-banner-1.webp",
+  "/images/home/hero-banner-2.webp",
+  "/images/home/hero-banner-3.webp",
+  "/images/home/hero-banner-4.webp",
+];
