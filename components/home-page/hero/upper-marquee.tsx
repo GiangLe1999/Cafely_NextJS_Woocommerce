@@ -5,7 +5,7 @@ import Marquee from "react-fast-marquee";
 const UpperMarquee: FC = (): JSX.Element => {
   return (
     <Marquee gradient={false} speed={30} loop={0} className="py-6 border-b">
-      <div className="flex flex-shrink-0 items-center gap-12 will-change-transform">
+      <div className="ml-12 flex flex-shrink-0 items-center gap-12 will-change-transform">
         <div className="inline-flex items-center font-pp_sans uppercase leading-none text-brown tracking-tighty text-2xl md:text-3xl tracking-[-0.3px]">
           Delicious Flavors
         </div>

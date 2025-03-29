@@ -2,6 +2,7 @@ import { FC, JSX } from "react";
 import HeroContent from "./content";
 import HeroCarousel from "./carousel";
 import UpperMarquee from "./upper-marquee";
+import LowerMarquee from "./lower-marquee";
 
 const Hero: FC = (): JSX.Element => {
   return (
@@ -15,6 +16,7 @@ const Hero: FC = (): JSX.Element => {
       </div>
 
       <UpperMarquee />
+      <LowerMarquee />
     </div>
   );
 };
