@@ -104,20 +104,3 @@ const HeroCarousel: FC = () => {
 };
 
 export default HeroCarousel;
-
-{
-  /* <div className="absolute bottom-9 left-10 grid grid-cols-5 right-10 gap-x-[27px]">
-        <ProgressResetProvider>
-          {[...Array(count)].map((_, index) => (
-            <CountDownProgress
-              key={index}
-              index={index}
-              api={api}
-              selected={current}
-              count={count}
-              setCurrent={setCurrent}
-            />
-          ))}
-        </ProgressResetProvider>
-      </div> */
-}
