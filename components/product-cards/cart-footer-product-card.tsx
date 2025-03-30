@@ -1,4 +1,4 @@
-import { Product, ProductAttribute } from "@/types/product";
+import { Product, ProductAttribute, ProductCategory } from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, JSX, useMemo, useCallback } from "react";
@@ -13,11 +13,9 @@ interface Props {
 const CartFooterProductCard: FC<Props> = ({ product }): JSX.Element => {
   const { addItem } = useCartStore();
 
-  // Memoize is_beans to prevent unnecessary recalculations
   const is_beans = useMemo(() => {
-    return (
-      product?.attributes?.find((a: ProductAttribute) => a.name === "is_beans")
-        ?.options?.[0] === "true"
+    return product?.categories?.some(
+      (a: ProductCategory) => a.name === "Whole Bean Coffee"
     );
   }, [product]);
 

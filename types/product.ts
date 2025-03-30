@@ -8,6 +8,12 @@ export interface ProductAttribute {
   visible: boolean;
 }
 
+export interface ProductCategory {
+  id: number;
+  name: string;
+  slug: string;
+}
+
 export interface Product {
   id: number; // ID của sản phẩm
   name: string; // Tên sản phẩm
@@ -24,11 +30,7 @@ export interface Product {
     src: string; // Đường dẫn ảnh
     alt: string; // Văn bản thay thế cho ảnh
   }>; // Danh sách hình ảnh
-  categories: Array<{
-    id: number; // ID danh mục
-    name: string; // Tên danh mục
-    slug: string; // Slug của danh mục
-  }>; // Danh sách danh mục sản phẩm
+  categories: Array<ProductCategory>; // Danh sách danh mục sản phẩm
   tags: Array<{
     id: number; // ID tag
     name: string; // Tên tag
@@ -41,4 +43,9 @@ export interface Product {
   average_rating: string;
   rating_count: number;
   attributes: Array<ProductAttribute>;
+}
+
+export interface HomeProduct extends Product {
+  thumbnail: string;
+  first_gallery_image: string;
 }

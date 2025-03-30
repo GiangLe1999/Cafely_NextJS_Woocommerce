@@ -1,12 +1,22 @@
+import AllProducts from "@/components/home-page/all-products";
 import Hero from "@/components/home-page/hero";
 import ProductMarketing from "@/components/home-page/product-marketing";
+import { getHomeProducts } from "@/queries/product.query";
 import { NextPage } from "next";
 
-const Home: NextPage = () => {
+const Home: NextPage = async () => {
+  const { bestsellers, whole_bean_coffee, whole_instant_coffee } =
+    await getHomeProducts();
+
   return (
     <>
       <Hero />
       <ProductMarketing />
+      <AllProducts
+        bestsellers={bestsellers}
+        whole_bean_coffee={whole_bean_coffee}
+        whole_instant_coffee={whole_instant_coffee}
+      />
     </>
   );
 };

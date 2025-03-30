@@ -31,8 +31,8 @@ const SearchedPostCard: FC<Props> = ({ product }): JSX.Element => {
 
       <div className="flex flex-1 flex-col px-2 pb-3 text-left">
         <div className="flex items-center mb-3">
-          <div className="mr-1.5 mt-[1px] text-xs md:text-[13.5px] font-bold text-app-brown">
-            {product.average_rating}
+          <div className="mr-1.5 mt-1 text-xs md:text-[13.5px] font-bold text-app-brown">
+            {parseFloat(product.average_rating).toFixed(2)}
           </div>
           <div className="flex-1">
             <Rating value={parseFloat(product.average_rating) || 0} readonly />

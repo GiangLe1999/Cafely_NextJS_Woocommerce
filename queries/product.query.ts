@@ -59,3 +59,17 @@ export const get3BestSellers = async () => {
     };
   }
 };
+
+// Get Home Products
+export const getHomeProducts = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.BACKEND_BASE_URL}/custom/v1/home-products`
+    );
+    return response.data;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};
