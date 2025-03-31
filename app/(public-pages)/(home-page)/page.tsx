@@ -1,4 +1,5 @@
 import AllProducts from "@/components/home-page/all-products";
+import Benefits from "@/components/home-page/benefits";
 import Hero from "@/components/home-page/hero";
 import ProductMarketing from "@/components/home-page/product-marketing";
 import SpecialThings from "@/components/home-page/special-things";
@@ -19,6 +20,7 @@ const Home: NextPage = async () => {
         whole_instant_coffee={whole_instant_coffee}
       />
       <SpecialThings />
+      <Benefits />
     </>
   );
 };
