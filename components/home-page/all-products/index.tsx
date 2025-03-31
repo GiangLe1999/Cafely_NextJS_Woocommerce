@@ -2,13 +2,13 @@
 
 import StandardProductCard from "@/components/product-cards/standard-product-card";
 import { cn } from "@/lib/utils";
-import { Product } from "@/types/product";
+import { HomeProduct } from "@/types/product";
 import { FC, JSX, useState } from "react";
 
 interface Props {
-  bestsellers: Product[];
-  whole_bean_coffee: Product[];
-  whole_instant_coffee: Product[];
+  bestsellers: HomeProduct[];
+  whole_bean_coffee: HomeProduct[];
+  whole_instant_coffee: HomeProduct[];
 }
 
 const AllProducts: FC<Props> = ({
@@ -17,6 +17,7 @@ const AllProducts: FC<Props> = ({
   whole_instant_coffee,
 }): JSX.Element => {
   const [selectedTab, setSelectedTab] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const products =
     selectedTab === 0
@@ -26,7 +27,13 @@ const AllProducts: FC<Props> = ({
       : whole_instant_coffee;
 
   const handleTabClick = (index: number) => {
-    setSelectedTab(index);
+    if (selectedTab !== index) {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setSelectedTab(index);
+        setIsAnimating(false);
+      }, 300); // Thời gian cho animation ẩn
+    }
   };
 
   return (
@@ -81,9 +88,42 @@ const AllProducts: FC<Props> = ({
             </button>
           </div>
 
-          <div className="grid w-full grid-cols-2 gap-3 md:gap-4 content-start md:col-span-4 md:grid-cols-4">
-            {products?.map((product) => (
-              <StandardProductCard key={product.id} product={product} />
+          <div
+            className={cn(
+              "grid w-full grid-cols-2 gap-3 md:gap-4 content-start md:col-span-4 md:grid-cols-4",
+              "transition-all duration-300 ease-in-out overflow-hidden",
+              isAnimating
+                ? "opacity-0 translate-y-8"
+                : "opacity-100 translate-y-0"
+            )}
+          >
+            {products?.map((product, index) => (
+              <StandardProductCard
+                key={product.id}
+                product={product}
+                isBestseller={index === 0 && selectedTab === 0}
+                isBestDeal={
+                  product.attributes.find(
+                    (attribute) => attribute.name === "is_best_deal"
+                  )
+                    ? true
+                    : false
+                }
+                isStrongest={
+                  product.attributes.find(
+                    (attribute) => attribute.name === "is_strongest"
+                  )
+                    ? true
+                    : false
+                }
+                isSale={
+                  product.attributes.find(
+                    (attribute) => attribute.name === "is_sale"
+                  )
+                    ? true
+                    : false
+                }
+              />
             ))}
           </div>
         </div>

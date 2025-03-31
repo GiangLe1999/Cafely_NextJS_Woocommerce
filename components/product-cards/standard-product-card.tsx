@@ -8,15 +8,25 @@ import { Button } from "../ui/button";
 
 interface Props {
   product: HomeProduct;
+  isBestseller?: boolean;
+  isStrongest?: boolean;
+  isBestDeal?: boolean;
+  isSale?: boolean;
 }
 
-const StandardProductCard: FC<Props> = ({ product }): JSX.Element => {
+const StandardProductCard: FC<Props> = ({
+  product,
+  isBestseller,
+  isStrongest,
+  isBestDeal,
+  isSale,
+}): JSX.Element => {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="bg-light_pink h-full group relative flex flex-col gap-y-4 rounded-3xl border border-transparent p-2 transition-all duration-500 hover:border-transparent hover:bg-white hover:border-app-lavender md:gap-y-5"
+      className="bg-light_pink h-full group relative flex flex-col gap-y-4 rounded-3xl border border-transparent p-2 transition-all duration-500 hover:bg-white hover:border-app-lavender md:gap-y-5"
     >
-      <div className="relative w-full overflow-hidden rounded-2xl md:aspect-[4/3.2]">
+      <div className="relative aspect-[4/3.2] min-h-28 w-full overflow-hidden rounded-2xl xs:rounded-3xl md:min-h-48">
         {/* Ảnh thumbnail (hiển thị mặc định) */}
         <Image
           src={product.thumbnail}
@@ -34,6 +44,39 @@ const StandardProductCard: FC<Props> = ({ product }): JSX.Element => {
           className="object-cover absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
           sizes="100vw"
         />
+
+        <div className="absolute gap-1 z-[1] flex md:gap-2 left-2 top-2 md:left-3 md:top-3">
+          {isBestseller && (
+            <span className="rounded-[6px] px-2 py-1 text-[10px] font-bold uppercase leading-none tracking-[.04rem] md:text-xs bg-[#f3d054] text-[#a24400]">
+              Bestseller
+            </span>
+          )}
+
+          {isBestDeal && (
+            <span className="rounded-[6px] px-2 py-1 text-[10px] font-bold uppercase leading-none tracking-[.04rem] md:text-xs bg-[#fb923c] text-white">
+              Best deal
+            </span>
+          )}
+
+          {isStrongest && (
+            <span className="rounded-[6px] px-2 py-1 text-[10px] font-bold uppercase leading-none tracking-[.04rem] md:text-xs bg-[#f3d054] text-[#a24400]">
+              Strongest
+            </span>
+          )}
+
+          {isSale && (
+            <span className="rounded-[6px] px-2 py-1 text-[10px] font-bold uppercase leading-none tracking-[.04rem] md:text-xs bg-[#ec4899] text-white">
+              Save{" "}
+              {(
+                ((parseFloat(product.regular_price) -
+                  parseFloat(product.sale_price)) /
+                  parseFloat(product.regular_price)) *
+                100
+              ).toFixed(0)}
+              %
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col px-2 text-left xs:px-3 lg:px-4.5 pb-3 md:pb-4">
