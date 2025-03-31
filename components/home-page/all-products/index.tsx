@@ -1,8 +1,12 @@
 "use client";
 
 import StandardProductCard from "@/components/product-cards/standard-product-card";
+import { Button } from "@/components/ui/button";
+import Heading2 from "@/components/ui/heading-2";
 import { cn } from "@/lib/utils";
 import { HomeProduct } from "@/types/product";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { FC, JSX, useState } from "react";
 
 interface Props {
@@ -40,13 +44,15 @@ const AllProducts: FC<Props> = ({
     <div className="pt-5 pb-12">
       <div className="container flex flex-col gap-y-8 lg:gap-y-12 text-center items-center">
         <div className="flex flex-col">
-          <h2 className="text-primary font-pp_sans leading-[1.1] text-[72px] mt-[50px] mb-9 uppercase tracking-[-1.44px]">
-            Shop Our Best Sellers
-          </h2>
+          <Heading2
+            content="Shop Our Best Sellers"
+            className="mt-[50px] mb-9"
+          />
+
           <div className="text-primary md:text-lg max-w-[640px] font-medium">
             <p>
               Explore our premium selection of bold coffees, crafted to fuel
-              your daily hustle, focusing on a healthy body and strong mind.{" "}
+              your daily hustle, focusing on a healthy body and strong mind.
             </p>
           </div>
         </div>
@@ -91,9 +97,9 @@ const AllProducts: FC<Props> = ({
           <div
             className={cn(
               "grid w-full grid-cols-2 gap-3 md:gap-4 content-start md:col-span-4 md:grid-cols-4",
-              "transition-all duration-300 ease-in-out overflow-hidden",
+              "transition-all duration-400 ease-in-out overflow-hidden",
               isAnimating
-                ? "opacity-0 translate-y-8"
+                ? "opacity-0 translate-y-4"
                 : "opacity-100 translate-y-0"
             )}
           >
@@ -125,6 +131,18 @@ const AllProducts: FC<Props> = ({
                 }
               />
             ))}
+          </div>
+
+          <div className="mt-8 text-center md:mt-12">
+            <Button className="h-[49px] group p-0">
+              <Link
+                className="flex w-full text-base h-full items-center justify-between gap-12 font-bold text-foreground group-hover:text-white transition duration-500 px-6 py-3"
+                href="/collections/all"
+              >
+                Shop All Vietnamese Coffee
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-500" />
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

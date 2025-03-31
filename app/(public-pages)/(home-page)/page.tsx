@@ -1,6 +1,7 @@
 import AllProducts from "@/components/home-page/all-products";
 import Hero from "@/components/home-page/hero";
 import ProductMarketing from "@/components/home-page/product-marketing";
+import SpecialThings from "@/components/home-page/special-things";
 import { getHomeProducts } from "@/queries/product.query";
 import { NextPage } from "next";
 
@@ -17,6 +18,7 @@ const Home: NextPage = async () => {
         whole_bean_coffee={whole_bean_coffee}
         whole_instant_coffee={whole_instant_coffee}
       />
+      <SpecialThings />
     </>
   );
 };

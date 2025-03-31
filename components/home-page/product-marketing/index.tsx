@@ -11,6 +11,7 @@ import { FC, JSX } from "react";
 import LineWithDot from "./line-with-dot";
 import MicroscopeIcon from "@/components/icons/microscope";
 import BoxesIcon from "@/components/icons/boxes";
+import Heading2 from "@/components/ui/heading-2";
 
 const ProductMarketing: FC = (): JSX.Element => {
   const [offset, setOffset] = useState(0);
@@ -42,9 +43,10 @@ const ProductMarketing: FC = (): JSX.Element => {
             <h5 className="mb-4 text-xs font-bold uppercase tracking-[0.65px] text-[#5A251D] md:mb-8 md:text-[13px] mt-[10px]">
               Your morning ritual, totally transformed
             </h5>
-            <h2 className="relative uppercase mb-4 md:mb-6 mt-0 tracking-[-1.44px] text-primary font-pp_sans text-[72px] leading-[72px]">
-              Vietnamese Coffee 2.0
-            </h2>
+            <Heading2
+              content="Vietnamese Coffee 2.0"
+              className="mb-4 md:mb-6 mt-0"
+            />
             <p className="text-[#5A251D] font-moret leading-[1.3] text-2xl tracking-[-0.24px] font-medium">
               Start your day with bold, flavorful Vietnamese coffee, reimagined
               without the sugar.
