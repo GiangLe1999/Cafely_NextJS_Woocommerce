@@ -1,6 +1,7 @@
 import Heading2 from "@/components/ui/heading-2";
 import { FC, JSX } from "react";
 import GuidanceBlock from "./block";
+import Subheading from "@/components/ui/subheading";
 
 const Guidance: FC = (): JSX.Element => {
   return (
@@ -11,11 +12,13 @@ const Guidance: FC = (): JSX.Element => {
             content="Enhance Your Brew with Phin Filters"
             className="mb-3 md:mb-6"
           />
-          <div className="text-primary md:text-lg max-w-[700px] font-medium">
-            Amplify your Vietnamese coffee experience with the authentic brewing
-            method. Coming soon: Cafely&apos;s own phin filters for maximum
-            strength and flavor.
-          </div>
+
+          <Subheading
+            content="Amplify your Vietnamese coffee experience with the authentic brewing
+            method. Coming soon: Cafely's own phin filters for maximum
+            strength and flavor."
+            className="max-w-[700px]"
+          />
         </div>
 
         {/* snap-x snap-mandatory: Bật chế độ snap scrolling, giúp các phần tử dừng đúng vị trí khi cuộn ngang. */}

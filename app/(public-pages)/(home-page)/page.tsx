@@ -1,3 +1,4 @@
+import Brew from "@/components/brew";
 import AllProducts from "@/components/home-page/all-products";
 import Benefits from "@/components/home-page/benefits";
 import Guidance from "@/components/home-page/guidance";
@@ -23,6 +24,7 @@ const Home: NextPage = async () => {
       <SpecialThings />
       <Benefits />
       <Guidance />
+      <Brew />
     </>
   );
 };

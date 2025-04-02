@@ -3,6 +3,7 @@
 import StandardProductCard from "@/components/product-cards/standard-product-card";
 import { Button } from "@/components/ui/button";
 import Heading2 from "@/components/ui/heading-2";
+import Subheading from "@/components/ui/subheading";
 import { cn } from "@/lib/utils";
 import { HomeProduct } from "@/types/product";
 import { ArrowRight } from "lucide-react";
@@ -49,12 +50,11 @@ const AllProducts: FC<Props> = ({
             className="mt-[50px] mb-9"
           />
 
-          <div className="text-primary md:text-lg max-w-[640px] font-medium">
-            <p>
-              Explore our premium selection of bold coffees, crafted to fuel
-              your daily hustle, focusing on a healthy body and strong mind.
-            </p>
-          </div>
+          <Subheading
+            content="Explore our premium selection of bold coffees, crafted to fuel
+              your daily hustle, focusing on a healthy body and strong mind."
+            className="max-w-[640px]"
+          />
         </div>
 
         <div className="flex w-full flex-col items-center">
