@@ -76,3 +76,8 @@ body {
 .rfm-marquee {
   min-width: 0px !important;
 }
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

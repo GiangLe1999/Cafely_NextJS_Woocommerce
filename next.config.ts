@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
         hostname: "cafely.local",
       },
     ],
+    unoptimized: true,
   },
 };
 
