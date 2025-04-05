@@ -1,14 +1,14 @@
 import { FC, JSX } from "react";
-import Heading2 from "../ui/heading-2";
-import Subheading from "../ui/subheading";
-import FrenchPressIcon from "../icons/french-press";
-import ChemexIcon from "../icons/chemex";
-import ExpressoCupIcon from "../icons/expresso-cup";
-import ExpressoMachineIcon from "../icons/expresso-machine";
-import PourOverIcon from "../icons/pour-over";
-import AeropressIcon from "../icons/aeropress";
-import MokaPotIcon from "../icons/moka-pot";
-import { Button } from "../ui/button";
+import Heading2 from "../../ui/heading-2";
+import Subheading from "../../ui/subheading";
+import FrenchPressIcon from "../../icons/french-press";
+import ChemexIcon from "../../icons/chemex";
+import ExpressoCupIcon from "../../icons/expresso-cup";
+import ExpressoMachineIcon from "../../icons/expresso-machine";
+import PourOverIcon from "../../icons/pour-over";
+import AeropressIcon from "../../icons/aeropress";
+import MokaPotIcon from "../../icons/moka-pot";
+import { Button } from "../../ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 

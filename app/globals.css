@@ -81,3 +81,41 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+table.compare-table tr th,
+table.compare-table tr td {
+  @apply sm:px-4 md:px-8 py-5 border-b border-[#ff4a1180] text-sm font-bold text-brown;
+}
+
+table.compare-table tr:last-of-type th,
+table.compare-table tr:last-of-type td {
+  @apply border-none;
+}
+
+table.compare-table tr td:last-of-type {
+  @apply text-[#89685c] font-bold text-sm;
+}
+
+table.compare-table tr th {
+  @apply text-left pl-0;
+}
+
+table.compare-table tr svg {
+  @apply mx-auto;
+}
+
+table.compare-table td:first-of-type {
+  @apply bg-light_pink;
+}
+
+table.compare-table tr:first-of-type td:first-of-type {
+  @apply rounded-tl-[16px] rounded-tr-[16px];
+}
+
+table.compare-table tr:last-of-type td:first-of-type {
+  @apply rounded-bl-[16px] rounded-br-[16px];
+}
+
+table.compare-table tr td:first-of-type {
+  @apply w-[35%] px-8 shadow-[10px_10px_0px_0px_#FF4A11];
+}
