@@ -9,6 +9,7 @@ import TheDifference from "@/components/home-page/the-difference";
 import { getHomeProducts } from "@/queries/product.query";
 import { NextPage } from "next";
 import Reviews from "@/components/home-page/reviews";
+import Guarantee from "@/components/home-page/guarantee";
 
 const Home: NextPage = async () => {
   const { bestsellers, whole_bean_coffee, whole_instant_coffee } =
@@ -29,6 +30,7 @@ const Home: NextPage = async () => {
       <Brew />
       <TheDifference />
       <Reviews />
+      <Guarantee />
     </>
   );
 };
