@@ -8,6 +8,7 @@ import SpecialThings from "@/components/home-page/special-things";
 import TheDifference from "@/components/home-page/the-difference";
 import { getHomeProducts } from "@/queries/product.query";
 import { NextPage } from "next";
+import Reviews from "@/components/home-page/reviews";
 
 const Home: NextPage = async () => {
   const { bestsellers, whole_bean_coffee, whole_instant_coffee } =
@@ -27,6 +28,7 @@ const Home: NextPage = async () => {
       <Guidance />
       <Brew />
       <TheDifference />
+      <Reviews />
     </>
   );
 };

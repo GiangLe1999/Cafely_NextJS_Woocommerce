@@ -9,7 +9,7 @@ interface Props {
 
 const GuidanceBlock: FC<Props> = ({ img, order, description }): JSX.Element => {
   return (
-    <div className="flex flex-col gap-4 shrink-0 basis-4/5 md:flex-1 md:gap-5">
+    <div className="flex flex-col gap-4 shrink-0 basis-4/5 snap-start md:flex-1 md:gap-5">
       <div className="overflow-hidden relative rounded-[8px] md:rounded-[12px] w-full aspect-square">
         <Image
           src={img}

@@ -22,7 +22,7 @@ const Guidance: FC = (): JSX.Element => {
         </div>
 
         {/* snap-x snap-mandatory: Bật chế độ snap scrolling, giúp các phần tử dừng đúng vị trí khi cuộn ngang. */}
-        <div className="flex flex-row w-full gap-4 mt-12 no-scrollbar md:mt-16 md:place-content-center md:gap-8 items-baseline overflow-x-auto">
+        <div className="flex flex-row w-full gap-4 mt-12 no-scrollbar snap-x snap-mandatory md:mt-16 md:place-content-center md:gap-8 items-baseline overflow-x-auto">
           <GuidanceBlock
             order={1}
             description="Add 2 cups of fresh ground coffee"
